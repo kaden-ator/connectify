@@ -1,0 +1,54 @@
+<!-- Kaden Fugate - fugateka@oregonstate.edu - CS 290 -->
+<!doctype html>
+<html lang="en">
+  	<head>
+    	<meta charset="UTF-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<link rel="stylesheet" href="./css/style.css">
+    	<!-- import script as module so script can import other js files -->
+    	<script type="module" src="/scripts/add_song.js"></script>
+    	<title>Add Song</title>
+  	</head>
+  	<body>
+		<!-- Header -->
+		<header>
+		<!-- headerSection is column flex box -->
+			<div id="headerSection">
+				<div id="titleSection">
+					<h2>Connectify</h2>
+				</div>
+				<!-- navSection is row flex box -->
+			</div>
+		</header>
+		<!-- Main -->
+		<main>
+			<h2>Create Account</h2>
+			<!-- form to add song -->
+				<form action="/create_account" method="POST">
+					<fieldset>
+						<legend>Account Details</legend>
+						<!-- Each label and input is in div so they 
+						will be treated as one object by flexbox -->
+						<div>
+							<label for="email">Email:</label>
+							<input type="text" id="email" name="email">
+						</div>
+						<div>
+							<label for="username">Username:</label>
+							<input type="text" id="username" name="username">
+						</div>
+						<div>
+							<label for="pass">Password:</label>
+							<input type="password" id="pass" name="pass">
+						</div>
+					</fieldset>
+					<button type="submit" id="updateBtn">Create Account</button>
+				</form>
+		</main>
+		<!-- Footer -->
+		<footer style="color: white">
+			<p><strong>2023 - Created by: Kaden Fugate</strong></p>
+		</footer>
+  	</body>
+</html>

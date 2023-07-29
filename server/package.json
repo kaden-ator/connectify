@@ -1,0 +1,17 @@
+{
+  "name": "connectify",
+  "version": "1.0.0",
+  "description": "This app will allow a user to create a group. This user can then invite members to their group. This will enable other users to queue (or request to queue) songs into a users spotify queue. Along with this, it will track stats for the group.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Kaden Fugate",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.4.1"
+  }
+}
