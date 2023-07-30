@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({                                        
 
     display_name: String,
     username: String,
-    pass: String
+    pass: String,
+    access_key: String
 
 });
 const User = mongoose.model("User", userSchema);                                // make song model with schema
@@ -23,7 +24,8 @@ function create_user(email, username, pass){
     ({
         email:   email,
         username:   username,
-        pass:   pass
+        pass:   pass,
+        access_key: ""
     });
 
 }
