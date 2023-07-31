@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({                                        // create user mongoose schema
 
-    em_add: String,
+    email: String,
     username: String,
-    pass: String,
-    tokn: String
+    password: String,
+    access_key: String
 
 });
 const User = mongoose.model("User", userSchema);                                // make song model with schema
@@ -18,19 +18,14 @@ mongoose.connect('mongodb+srv://' +
     '@connectifydb.tjeylyr.mongodb.net/USERS?retryWrites=true&w=majority'
 );  
 
-function create_user(em_add, username, pass, tokn){
-
-    console.log("em_add: " + em_add + "\n");
-    console.log("username: " + username + "\n");
-    console.log("pass: " + pass + "\n");
-    console.log("tokn: " + tokn + "\n");
-
+function create_user(email, username, password, access_key){
+    
     return new User
     ({
-        em_add:   em_add,
+        email:   email,
         username:   username,
-        pass:   pass,
-        tokn: tokn
+        password:   password,
+        access_key: access_key
     });
 
 }
@@ -42,4 +37,11 @@ async function add_user(user){
 
 }
 
-module.exports = {create_user, add_user};
+async function email_exists(email){
+
+    if( await User.findOne({ email }) != null ){ return true; } 
+    else{ return false; }
+
+}
+
+module.exports = {create_user, add_user, email_exists};

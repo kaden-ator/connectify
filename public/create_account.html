@@ -23,13 +23,14 @@
 		<main>
 			<h2>Create Account</h2>
 			<!-- form to add song -->
-				<form action="/create_account" method="POST">
+				<form action="/create_account" method="POST" id="account-form">
 					<fieldset>
 						<legend>Account Details</legend>
 						<!-- Each label and input is in div so they 
 						will be treated as one object by flexbox -->
 						<div>
 							<input type="hidden" id="code" name="code">
+
 							<label for="email">Email:</label>
 							<input type="text" id="email" name="email">
 						</div>
@@ -42,7 +43,7 @@
 							<input type="password" id="pass" name="pass">
 						</div>
 					</fieldset>
-					<button type="submit" id="updateBtn">Create Account</button>
+					<button type="submit" id="create-account-btn">Create Account</button>
 				</form>
 		</main>
 		<!-- Footer -->

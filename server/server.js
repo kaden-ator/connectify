@@ -22,15 +22,20 @@ app.get('/create_account', (req, res) => {
 
 app.post('/create_account', async (req, res) => {
 
-    console.log("req.body.code: " + req.body.code);
+    const USER = await DB_interact.create_user(req.body.email, req.body.username, req.body.pass, req.body.code);
 
-    const USER = DB_interact.create_user(req.body.email, req.body.username, req.body.pass, req.body.code);
-    console.log(USER);
-
-    DB_interact.add_user( USER );
+    await DB_interact.add_user( USER );
     
     res.redirect("/");
+});
 
+app.post('/validate_email', async (req, res) => {
+
+    email = req.body.email;
+
+    const email_exists = await DB_interact.email_exists(email);
+
+    res.json({ email_exists });
 });
 
 app.listen(3000);
