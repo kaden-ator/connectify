@@ -2,9 +2,9 @@ const querystring = require('querystring');
 require('dotenv').config
 
 const AUTHORIZATION_URL = 'https://accounts.spotify.com/authorize?';
-var REDIRECT_URI = 'http://localhost:3000/redirect';
+var REDIRECT_URI = 'http://localhost:3000/create_account';
 
-function makeAuthURL(email, username, pass)
+function makeAuthURL()
 {
 
     return AUTHORIZATION_URL + querystring.stringify({

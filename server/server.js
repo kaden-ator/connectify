@@ -1,5 +1,6 @@
 const DB_interact = require('./mongoose');
 const Spotify_API = require('./spotify');
+const querystring = require('querystring');
 const express = require('express');
 const app = express();
 
@@ -9,15 +10,26 @@ app.use(express.json());
 
 app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
-app.get('/create_account.html', (req, res) => { 
-    
+app.get('/spotify_redirect', (req, res) => { 
+    res.redirect( Spotify_API.makeAuthURL() );
 });
+
+app.get('/create_account', (req, res) => {
+    res.redirect('/create_account.html?' + querystring.stringify({
+        code: req.query.code
+    }));
+})
 
 app.post('/create_account', async (req, res) => {
 
-    res.redirect( Spotify_API.makeAuthURL(req.body.email, req.body.username, req.body.pass) );
+    console.log("req.body.code: " + req.body.code);
 
-    DB_interact.add_user( DB_interact.create_user(req.body.email, req.body.username, req.body.pass) );
+    const USER = DB_interact.create_user(req.body.email, req.body.username, req.body.pass, req.body.code);
+    console.log(USER);
+
+    DB_interact.add_user( USER );
+    
+    res.redirect("/");
 
 });
 

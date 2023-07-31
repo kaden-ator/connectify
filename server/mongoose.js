@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({                                        // create user mongoose schema
 
-    display_name: String,
+    em_add: String,
     username: String,
     pass: String,
-    access_key: String
+    tokn: String
 
 });
 const User = mongoose.model("User", userSchema);                                // make song model with schema
@@ -18,14 +18,19 @@ mongoose.connect('mongodb+srv://' +
     '@connectifydb.tjeylyr.mongodb.net/USERS?retryWrites=true&w=majority'
 );  
 
-function create_user(email, username, pass){
+function create_user(em_add, username, pass, tokn){
+
+    console.log("em_add: " + em_add + "\n");
+    console.log("username: " + username + "\n");
+    console.log("pass: " + pass + "\n");
+    console.log("tokn: " + tokn + "\n");
 
     return new User
     ({
-        email:   email,
+        em_add:   em_add,
         username:   username,
         pass:   pass,
-        access_key: ""
+        tokn: tokn
     });
 
 }

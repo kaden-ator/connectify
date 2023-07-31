@@ -1,0 +1,15 @@
+body{ min-height: 100vh; }
+
+#body-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sign-log-in-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column nowrap;
+    flex: 1 1;
+}
