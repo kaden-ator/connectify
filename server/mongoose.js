@@ -15,14 +15,14 @@ mongoose.connect('mongodb+srv://' +
     process.env.USERNAME +
     ':' +
     process.env.PASSWORD +
-    '@connectifydb.tjeylyr.mongodb.net/USERS?retryWrites=true&w=majority'
+    '@connectifydb.tjeylyr.mongodb.net/user_data?retryWrites=true&w=majority'
 );  
 
 function create_user(email, username, password, access_key){
     
     return new User
     ({
-        email:   email,
+        email:   email.toLowerCase(),
         username:   username,
         password:   password,
         access_key: access_key
@@ -39,9 +39,16 @@ async function add_user(user){
 
 async function email_exists(email){
 
-    if( await User.findOne({ email }) != null ){ return true; } 
+    if( await User.findOne({ email: email }) != null ){ return true; } 
     else{ return false; }
 
 }
 
-module.exports = {create_user, add_user, email_exists};
+async function username_exists(username){
+
+    if( await User.findOne({ username: username }) != null ){ return true; }
+    else{ return false; }
+
+}
+
+module.exports = {create_user, add_user, email_exists, username_exists};

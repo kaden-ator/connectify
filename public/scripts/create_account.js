@@ -1,17 +1,21 @@
 const url = new URL( window.location.href );
 const query_params = new URLSearchParams( url.search );
 var email = undefined;
+var username = undefined;
 
 async function email_valid(email){
 
     try{
 
+        // fetch from validate_email in server.js
         const response = await fetch('/validate_email', {
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email }) // email sent to be checked
+
         });
 
         try{
@@ -19,10 +23,10 @@ async function email_valid(email){
             const data = await response.json();
 
             console.log(data);
-            console.log(data.email_exists);
 
-            if( !data.email_exists ){ console.log('Email valid.'); return true; }                // Email doesnt exist, cur email is valid
-            else{ console.log('Email already exists.'); return false; }
+            // email valid if doesn't already exist in DB
+            if( !data.email_exists ){ return true; }                
+            else{ return false; }
 
         }
         catch(err){ 
@@ -44,6 +48,48 @@ function regex_valid_email(email){
 
 }
 
+async function username_valid(username){
+
+    try{
+
+        // fetch from validate_username in server.js
+        const response = await fetch('/validate_username', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username }) // username sent to be checked
+
+        });
+
+        try{
+
+            const data = await response.json();
+
+            console.log(data);
+
+            // username valid if doesn't already exist in DB
+            if( !data.username_exists ){ return true; }                
+            else{ return false; }
+
+        }
+        catch(err){ 
+
+            console.error('Error during parse:', err);
+            return false; 
+
+        }
+    }
+    catch(err){ 
+
+        console.error('Error during fetch:', err);
+        return false; 
+
+    }
+
+}
+
 window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('code').value = query_params.get('code');
@@ -53,9 +99,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // update email
         email = document.getElementById('email').value;
-        
-        if( await email_valid(email) ){  }
-        else{  }
+
+        if( await !email_valid(email) ){  }
 
     });
 
@@ -64,13 +109,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
         event.preventDefault();
 
-        // update email
+        // update email & username
+
+        username = document.getElementById('username').value;
         email = document.getElementById('email').value;
-        const valid = await email_valid(email);
 
-        console.log("valid: " + valid);
+        const email_is_valid = await email_valid(email);
+        const username_is_valid = await username_valid(username);
 
-        if( regex_valid_email(email) && valid ){ event.target.submit(); }
+        console.log("email_is_valid: " + email_is_valid);
+        console.log("username_is_valid: " + username_is_valid);
+
+        if( regex_valid_email(email) && email_is_valid && username_is_valid ){ event.target.submit(); }
 
     }); 
 });

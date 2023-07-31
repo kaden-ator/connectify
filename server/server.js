@@ -15,15 +15,16 @@ app.get('/spotify_redirect', (req, res) => {
 });
 
 app.get('/create_account', (req, res) => {
+
     res.redirect('/create_account.html?' + querystring.stringify({
         code: req.query.code
     }));
+
 })
 
 app.post('/create_account', async (req, res) => {
 
-    const USER = await DB_interact.create_user(req.body.email, req.body.username, req.body.pass, req.body.code);
-
+    const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
     await DB_interact.add_user( USER );
     
     res.redirect("/");
@@ -32,10 +33,17 @@ app.post('/create_account', async (req, res) => {
 app.post('/validate_email', async (req, res) => {
 
     email = req.body.email;
-
     const email_exists = await DB_interact.email_exists(email);
 
     res.json({ email_exists });
+});
+
+app.post('/validate_username', async (req, res) => {
+
+    username = req.body.email;
+    const username_exists = await DB_interact.username_exists(username);
+
+    res.json({ username_exists });
 });
 
 app.listen(3000);
