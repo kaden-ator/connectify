@@ -10,6 +10,14 @@ app.use(express.json());
 
 app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
+app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/'); });
+
+app.get('/login', (req, res) => {
+
+    res.redirect('/login.html');
+
+})
+
 app.get('/spotify_redirect', (req, res) => { 
     res.redirect( Spotify_API.makeAuthURL() );
 });
@@ -32,7 +40,7 @@ app.post('/create_account', async (req, res) => {
 
 app.post('/validate_email', async (req, res) => {
 
-    email = req.body.email;
+    email = req.body.email.toLowerCase();
     const email_exists = await DB_interact.email_exists(email);
 
     res.json({ email_exists });
@@ -40,7 +48,7 @@ app.post('/validate_email', async (req, res) => {
 
 app.post('/validate_username', async (req, res) => {
 
-    username = req.body.email;
+    username = req.body.username.toLowerCase();
     const username_exists = await DB_interact.username_exists(username);
 
     res.json({ username_exists });

@@ -22,8 +22,6 @@ async function email_valid(email){
 
             const data = await response.json();
 
-            console.log(data);
-
             // email valid if doesn't already exist in DB
             if( !data.email_exists ){ return true; }                
             else{ return false; }
@@ -66,8 +64,6 @@ async function username_valid(username){
         try{
 
             const data = await response.json();
-
-            console.log(data);
 
             // username valid if doesn't already exist in DB
             if( !data.username_exists ){ return true; }                
@@ -116,9 +112,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const email_is_valid = await email_valid(email);
         const username_is_valid = await username_valid(username);
-
-        console.log("email_is_valid: " + email_is_valid);
-        console.log("username_is_valid: " + username_is_valid);
 
         if( regex_valid_email(email) && email_is_valid && username_is_valid ){ event.target.submit(); }
 
