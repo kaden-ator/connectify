@@ -12,6 +12,12 @@ app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
 app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/'); });
 
+app.get('/home/:username', (req, res) => {
+
+    const username = req.params.username;
+    
+});
+
 app.get('/login', (req, res) => {
 
     res.redirect('/login.html');

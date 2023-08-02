@@ -47,8 +47,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     });
 
+    const login_form = document.getElementById('login-form');
+
     // dont post form if email invalid
-    document.getElementById('login-form').addEventListener('submit', async (event) => {
+    login_form.addEventListener('submit', async (event) => {
 
         event.preventDefault();
 
@@ -58,7 +60,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const username_is_valid = await username_valid(username);
 
-        if( username_is_valid ){ event.target.submit(); }
+        if( username_is_valid ){ 
+            
+            // redirect user to www.URL.com/home/:username (lower case username for simplicity) ONLY IF VALID
+            const redirectURL = "http://localhost:3000/home/" + username.toLowerCase();
+            login_form.action = redirectURL;
+            
+            // submit the form 
+            event.target.submit(); 
+        }
 
     }); 
 });

@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     username: String,
     lowercase_username: String,
     password: String,
-    access_key: String
+    access_key: String,
+    Groups: [String]
 
 });
 
