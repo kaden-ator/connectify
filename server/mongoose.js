@@ -1,6 +1,22 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
+// hold group as an object containing the name, port, owner, and members of group
+const groupSchema = new mongoose.Schema({
+
+    group_name: String,
+    spotify_port: String,
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    members: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }]
+
+});
+
 // create user mongoose schema
 const userSchema = new mongoose.Schema({                                        
 
@@ -9,12 +25,15 @@ const userSchema = new mongoose.Schema({
     lowercase_username: String,
     password: String,
     access_key: String,
-    Groups: [String]
+    groups: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group"
+    }]
 
-});
+});         
 
-// make User model with schema
-const User = mongoose.model("User", userSchema);                                
+const User = mongoose.model("User", userSchema); 
+const Group = mongoose.model("Group", groupSchema); 
 
 mongoose.connect('mongodb+srv://' +
     process.env.USERNAME +
@@ -40,6 +59,7 @@ function create_user(email, username, password, access_key){
 // add user to DB
 async function add_user(user){
 
+    // .save adds user to db
     try{ user.save(); }
     catch(err){ console.log(err.message); }
 
@@ -48,6 +68,7 @@ async function add_user(user){
 // check that email is already in DB (not case sensitive)
 async function email_exists(email){
 
+    // will return true when findOne does not return null
     if( await User.findOne({ email: email }) != null ){ return true; } 
     else{ return false; }
 
