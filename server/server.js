@@ -1,4 +1,5 @@
-const DB_interact = require('./mongoose');
+const DB_interact_user = require('./User');
+const DB_interact_group = require('./Group');
 const Spotify_API = require('./spotify');
 const querystring = require('querystring');
 const express = require('express');
@@ -10,7 +11,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
-app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/'); });
+app.get('/delete_all', (req, res) => { DB_interact_user.clear_db(); res.redirect('/'); });
 
 app.get('/home/:username', (req, res) => {
 
@@ -38,8 +39,8 @@ app.get('/create_account', (req, res) => {
 
 app.post('/create_account', async (req, res) => {
 
-    const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
-    await DB_interact.add_user( USER );
+    const USER = await DB_interact_user.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
+    await DB_interact_user.add_user( USER );
     
     res.redirect("/");
 });
@@ -47,7 +48,7 @@ app.post('/create_account', async (req, res) => {
 app.post('/validate_email', async (req, res) => {
 
     email = req.body.email.toLowerCase();
-    const email_exists = await DB_interact.email_exists(email);
+    const email_exists = await DB_interact_user.email_exists(email);
 
     res.json({ email_exists });
 });
@@ -55,7 +56,7 @@ app.post('/validate_email', async (req, res) => {
 app.post('/validate_username', async (req, res) => {
 
     username = req.body.username.toLowerCase();
-    const username_exists = await DB_interact.username_exists(username);
+    const username_exists = await DB_interact_user.username_exists(username);
 
     res.json({ username_exists });
 });
