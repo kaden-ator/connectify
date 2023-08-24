@@ -17,23 +17,9 @@ app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/')
 // route to homepage for user - all user groups will be displayed
 app.get('/home/:username', (req, res) => {
 
-    cur_path = path.parse(__dirname);
-    console.log(path.join(cur_path.replace('server', 'public'), 'home.html/'));
+    cur_path = path.join(__dirname.replace('server', 'public'), 'home.html');
 
     res.sendFile(cur_path);
-
-    // fs.readFile('../public/home.html', 'utf8', (err, data) => {
-
-    //     if (err) {
-    //         console.error('Error reading HTML file:', err);
-    //         res.status(500).send('Internal Server Error');
-    //     } else {
-    //         res.send(data);
-    //     }
-
-    // });
-
-    const username = req.params.username;
     
 });
 
@@ -92,7 +78,7 @@ app.post('/validate_username', async (req, res) => {
 app.post('/get_groups', async (req, res) => {
 
     user = req.body.user;
-    const groups = await DB_interact.get_users_groups();
+    const groups = await DB_interact.get_users_groups(user);
 
     res.json({ groups });
 })

@@ -1,12 +1,6 @@
 window.addEventListener("DOMContentLoaded", async () => {
 
-    groups = await get_groups( get_username() );
-
-    for(group of groups){
-
-        console.log(group);
-
-    }
+    const groups = await get_groups( get_username() );
 
 });
 
@@ -24,7 +18,7 @@ async function get_groups(user){
         });
 
         // try to return array of groups in json format
-        try{ const data = await response.json(); return data.groups; }
+        try{ const data = await response.json(); console.log(data); return data.groups; }
 
         catch(err){ console.error('Error during parse:', err); }
     }
@@ -37,10 +31,10 @@ async function get_groups(user){
 // function will get users lowercase username
 function get_username(){
 
-    const url = new URL( window.location.href );
-    paths = url.split('/');
+    const url = window.location.href;
+    const paths = url.split('/');
 
     // return last path - aka username path
-    return paths[-1];
+    return paths[paths.length - 1];
 
 }
