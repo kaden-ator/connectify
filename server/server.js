@@ -1,6 +1,7 @@
 const DB_interact = require('./mongoose');
 const Spotify_API = require('./spotify');
 const querystring = require('querystring');
+const path = require('path');
 const express = require('express');
 const app = express();
 
@@ -16,8 +17,23 @@ app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/')
 // route to homepage for user - all user groups will be displayed
 app.get('/home/:username', (req, res) => {
 
+    cur_path = path.parse(__dirname);
+    console.log(path.join(cur_path.replace('server', 'public'), 'home.html/'));
+
+    res.sendFile(cur_path);
+
+    // fs.readFile('../public/home.html', 'utf8', (err, data) => {
+
+    //     if (err) {
+    //         console.error('Error reading HTML file:', err);
+    //         res.status(500).send('Internal Server Error');
+    //     } else {
+    //         res.send(data);
+    //     }
+
+    // });
+
     const username = req.params.username;
-    res.redirect("/home.html");
     
 });
 
@@ -31,10 +47,12 @@ app.get('/login', (req, res) => {
 
 })
 
+// route will verify a users spotify account
 app.get('/spotify_redirect', (req, res) => { 
     res.redirect( Spotify_API.makeAuthURL() );
 });
 
+// route will create an account and link the user with their api verification key
 app.get('/create_account', (req, res) => {
 
     res.redirect('/create_account.html?' + querystring.stringify({
@@ -43,6 +61,7 @@ app.get('/create_account', (req, res) => {
 
 })
 
+// route will add the user to the database
 app.post('/create_account', async (req, res) => {
 
     const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
@@ -51,6 +70,7 @@ app.post('/create_account', async (req, res) => {
     res.redirect("/");
 });
 
+// route will validate that a given email is in the database
 app.post('/validate_email', async (req, res) => {
 
     email = req.body.email.toLowerCase();
@@ -59,6 +79,7 @@ app.post('/validate_email', async (req, res) => {
     res.json({ email_exists });
 });
 
+// route will validate that a given username is in the database
 app.post('/validate_username', async (req, res) => {
 
     username = req.body.username.toLowerCase();
@@ -66,5 +87,14 @@ app.post('/validate_username', async (req, res) => {
 
     res.json({ username_exists });
 });
+
+// route will get all groups from a user
+app.post('/get_groups', async (req, res) => {
+
+    user = req.body.user;
+    const groups = await DB_interact.get_users_groups();
+
+    res.json({ groups });
+})
 
 app.listen(3000);

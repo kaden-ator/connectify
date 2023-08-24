@@ -71,6 +71,22 @@ async function username_exists(username){
 
 }
 
+// get all groups belonging to a given user. If no groups, return empty list
+async function get_users_groups(username){
+
+    user = await User.findOne({ lowercase_username: username });
+
+    // if user not found, return null to flag error
+    if(user == null){ return null; }
+
+    groups = []
+
+    // fill groups list
+    for(group of user.groups){ groups.append( await Group.findById(group) ); }
+
+    return groups;
+}
+
 // clear db [ REMOVE UPON COMPLETION ]
 async function clear_db(){ for( user of await User.find({}) ){ await User.deleteOne({ _id: user._id }); } }
 
@@ -126,4 +142,4 @@ async function join_group(user_id, group_id){
 
 }
 
-module.exports = { create_user, add_user, email_exists, username_exists, clear_db, create_group, add_group, join_group }
+module.exports = { create_user, add_user, email_exists, username_exists, get_users_groups, clear_db, create_group, add_group, join_group }

@@ -24,19 +24,12 @@ async function email_valid(email){
 
             // email valid if doesn't already exist in DB
             if( !data.email_exists ){ return true; }                
-            else{ return false; }
 
         }
-        catch(err){ 
-            console.error('Error during parse:', err);
-            return false; 
-        }
+        catch(err){ console.error('Error during parse:', err); }
     }
-    catch(err){ 
-        console.error('Error during fetch:', err);
-        return false; 
-    }
-    
+    catch(err){ console.error('Error during fetch:', err); }
+    return false; 
 }
 
 function regex_valid_email(email){
@@ -96,6 +89,7 @@ window.addEventListener('DOMContentLoaded', () => {
         // update email
         email = document.getElementById('email').value;
 
+        // add message stating why email not valid
         if( await !email_valid(email) ){  }
 
     });
