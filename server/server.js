@@ -1,5 +1,4 @@
-const DB_interact_user = require('./User');
-const DB_interact_group = require('./Group');
+const DB_interact = require('./mongoose');
 const Spotify_API = require('./spotify');
 const querystring = require('querystring');
 const express = require('express');
@@ -11,14 +10,21 @@ app.use(express.json());
 
 app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
-app.get('/delete_all', (req, res) => { DB_interact_user.clear_db(); res.redirect('/'); });
+// route to get only for development purposes - Clears database
+app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/'); });
 
+// route to homepage for user - all user groups will be displayed
 app.get('/home/:username', (req, res) => {
 
     const username = req.params.username;
+    res.redirect("/home.html");
     
 });
 
+// redirect to get method for home after successful login attempt
+app.post('/home/:username', (req, res) => { res.redirect("/home/" + req.params.username); })
+
+// route to login page
 app.get('/login', (req, res) => {
 
     res.redirect('/login.html');
@@ -39,8 +45,8 @@ app.get('/create_account', (req, res) => {
 
 app.post('/create_account', async (req, res) => {
 
-    const USER = await DB_interact_user.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
-    await DB_interact_user.add_user( USER );
+    const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
+    await DB_interact.add_user( USER );
     
     res.redirect("/");
 });
@@ -48,7 +54,7 @@ app.post('/create_account', async (req, res) => {
 app.post('/validate_email', async (req, res) => {
 
     email = req.body.email.toLowerCase();
-    const email_exists = await DB_interact_user.email_exists(email);
+    const email_exists = await DB_interact.email_exists(email);
 
     res.json({ email_exists });
 });
@@ -56,7 +62,7 @@ app.post('/validate_email', async (req, res) => {
 app.post('/validate_username', async (req, res) => {
 
     username = req.body.username.toLowerCase();
-    const username_exists = await DB_interact_user.username_exists(username);
+    const username_exists = await DB_interact.username_exists(username);
 
     res.json({ username_exists });
 });

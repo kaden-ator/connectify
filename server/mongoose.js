@@ -2,12 +2,17 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 
-mongoose.createConnection('mongodb+srv://' +
+// connect to DB to complete commands
+mongoose.connect('mongodb+srv://' +
     process.env.USERNAME +
     ':' +
     process.env.PASSWORD +
     '@connectifydb.tjeylyr.mongodb.net/connectify_db?retryWrites=true&w=majority'
 );
+
+/**************************************************************************************************************/
+/*                                           USER SCHEMA FUNCTIONS                                           */
+/**************************************************************************************************************/
 
 // create user mongoose schema
 const userSchema = new mongoose.Schema({                                        
