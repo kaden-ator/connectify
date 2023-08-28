@@ -54,6 +54,15 @@ async function add_user(user){
 
 }
 
+async function get_user_by_name(name){
+
+    try{ return await User.findOne({ lowercase_username: name }); }
+    catch(err){ console.log(err.message); }
+
+    return null;
+
+}
+
 // check that email is already in DB (not case sensitive)
 async function email_exists(email){
 
@@ -142,4 +151,4 @@ async function join_group(user_id, group_id){
 
 }
 
-module.exports = { create_user, add_user, email_exists, username_exists, get_users_groups, clear_db, create_group, add_group, join_group }
+module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, clear_db, create_group, add_group, join_group }

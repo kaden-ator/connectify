@@ -1,5 +1,28 @@
 var username = undefined;
 
+async function get_user(username){
+
+    try{
+        // fetch from get_user in server.js by username
+        const response = await fetch('/get_user', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+
+        });
+
+        try{ const data = await response.json(); return data.user; }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
 async function username_valid(username){
 
     try{
@@ -23,15 +46,11 @@ async function username_valid(username){
             else{ return false; }
 
         }
-        catch(err){ 
-            console.error('Error during parse:', err);
-            return false; 
-        }
+        catch(err){ console.error('Error during parse:', err); }
     }
-    catch(err){ 
-        console.error('Error during fetch:', err);
-        return false; 
-    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return false; 
 
 }
 
@@ -65,6 +84,8 @@ window.addEventListener('DOMContentLoaded', () => {
             // redirect user to www.URL.com/home/:username (lower case username for simplicity) ONLY IF VALID
             const redirectURL = "http://localhost:3000/home/" + username.toLowerCase();
             login_form.action = redirectURL;
+
+            localStorage.setItem('user', JSON.stringify( await get_user(username.toLowerCase()) ));
             
             // submit the form 
             event.target.submit(); 

@@ -17,21 +17,30 @@ app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/')
 // route to homepage for user - all user groups will be displayed
 app.get('/home/:username', (req, res) => {
 
-    cur_path = path.join(__dirname.replace('server', 'public'), 'home.html');
+    const cur_path = path.join(__dirname.replace('server', 'public'), 'home.html');
 
     res.sendFile(cur_path);
     
 });
 
 // redirect to get method for home after successful login attempt
-app.post('/home/:username', (req, res) => { res.redirect("/home/" + req.params.username); })
+app.post('/home/:username', (req, res) => { res.redirect("/home/" + req.params.username); });
+
+// route to group page
+app.get('/group/:group_id', (req, res) => {
+
+    const cur_path = path.join(__dirname.replace('server', 'public'), 'group.html');
+
+    res.sendFile(cur_path);
+    
+});
 
 // route to login page
 app.get('/login', (req, res) => {
 
     res.redirect('/login.html');
 
-})
+});
 
 // route will verify a users spotify account
 app.get('/spotify_redirect', (req, res) => { 
@@ -52,9 +61,20 @@ app.post('/create_account', async (req, res) => {
 
     const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
     await DB_interact.add_user( USER );
+
+    localStorage.setItem('user', USER);
     
     res.redirect("/");
 });
+
+app.post('/get_user', async(req, res) => {
+
+    username = req.body.username;
+    const user = await DB_interact.get_user_by_name(username);
+
+    res.json({ user });
+
+})
 
 // route will validate that a given email is in the database
 app.post('/validate_email', async (req, res) => {
