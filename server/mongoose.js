@@ -82,7 +82,7 @@ async function get_users_groups(username){
     groups = []
 
     // fill groups list
-    for(group of user.groups){ groups.append( await Group.findById(group) ); }
+    for(group of user.groups){ groups.push( await Group.findById(group) ); }
 
     return groups;
 }

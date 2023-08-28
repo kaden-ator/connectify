@@ -2,6 +2,13 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const groups = await get_groups( get_username() );
 
+    for(var group of groups){
+
+        console.log("group name: " + group.group_name);
+        document.body.appendChild( group_to_page(group.group_name) );
+
+    }
+
 });
 
 async function get_groups(user){
@@ -26,6 +33,17 @@ async function get_groups(user){
     
     // return null if fetch failed somewhere
     return null; 
+}
+
+function group_to_page(name){
+
+    var button = document.createElement('button');
+    button.innerHTML = name;
+
+    console.log(button);
+
+    return button;
+
 }
 
 // function will get users lowercase username
