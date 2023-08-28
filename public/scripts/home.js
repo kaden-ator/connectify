@@ -1,11 +1,11 @@
 window.addEventListener("DOMContentLoaded", async () => {
 
-    const groups = await get_groups( get_username() );
+    const username = get_username();
+    const groups = await get_groups(username);
 
     for(var group of groups){
 
-        console.log("group name: " + group.group_name);
-        document.body.appendChild( group_to_page(group.group_name) );
+        document.body.appendChild( make_group_button(group) );
 
     }
 
@@ -35,14 +35,24 @@ async function get_groups(user){
     return null; 
 }
 
-function group_to_page(name){
+// makes button to navigate to page
+function make_group_button(group){
+
+    var link = document.createElement('a');
+    link.href = make_link(group._id);
 
     var button = document.createElement('button');
-    button.innerHTML = name;
+    button.innerHTML = group.group_name;
 
-    console.log(button);
+    link.appendChild(button);
 
-    return button;
+    return link;
+
+}
+
+function make_link(id){
+
+    return 'http://localhost:3000/group/' + id;
 
 }
 
