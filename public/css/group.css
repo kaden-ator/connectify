@@ -1,0 +1,34 @@
+/* Reset default margin and padding */
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set the overall layout */
+html, body {
+    height: 100%;
+}
+
+.wrapper {
+    min-height: 100vh; /* Ensure wrapper extends to at least full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 91; /* Fill available space */
+    background-color: lightgray;
+}
+
+.footer {
+    background-color: darkgray;
+    flex: 9;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+} 
+
+.queue_icon{
+
+    height: 16;
+    width: 16;
+
+}

@@ -62,8 +62,6 @@ window.addEventListener('DOMContentLoaded', () => {
         // update email
         username = document.getElementById('username').value;
 
-        console.log( await username_valid(username) );
-
     });
 
     const login_form = document.getElementById('login-form');

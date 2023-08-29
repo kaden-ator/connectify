@@ -20,12 +20,12 @@ async function get_groups(user){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ user }) // user to get groups from
+            body: JSON.stringify({ user }) // send user to get groups from
 
         });
 
         // try to return array of groups in json format
-        try{ const data = await response.json(); console.log(data); return data.groups; }
+        try{ const data = await response.json(); return data.groups; }
 
         catch(err){ console.error('Error during parse:', err); }
     }
