@@ -30,17 +30,32 @@ html, body {
     padding: 20px; /* Add some padding for content */
 }
 
+.hidden-page {
+    position: fixed; /*Use fixed positioning for the sliding effect*/
+    top: 100vh;
+    left: 10;
+    width: 90%;
+    height: 100vh;
+    display: hidden;
+    background-color: white; /* Set the background color of the new page */
+    transition: top 0.5s; /* Apply a smooth transition */
+}
+
 .footer {
+    position: fixed;
+    left: 10%;
+    bottom: 0;
     background-color: darkgray;
-    flex: 0 0 40px; /* Fixed height for the music bar */
+    height: 40px; /* Keep the fixed height for the music bar */
+    width: 90%;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: 0 20px; /* Add padding for styling */
+    justify-content: flex-start;
+    padding: 0 20px;
+    transition: bottom 0.5s; /* Apply a smooth transition */
 }
 
 .queue_icon {
     height: 16px;
     width: 16px;
-    margin-left: 10px; /* Add some spacing between icon and content */
 }
