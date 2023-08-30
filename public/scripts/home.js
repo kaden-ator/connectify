@@ -2,6 +2,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const username = get_username();
     const groups = await get_groups(username);
+    const user = await get_user(username);
+
+    // add user data to local storage for future use
+    localStorage.setItem('user', JSON.stringify( user ));
 
     for(var group of groups){
 
@@ -10,6 +14,29 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 
 });
+
+async function get_user(username){
+
+    try{
+        // fetch from get_user in server.js by username
+        const response = await fetch('/get_user', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+
+        });
+
+        try{ const data = await response.json(); return data.user; }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
 
 async function get_groups(user){
     try{

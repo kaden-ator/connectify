@@ -61,10 +61,8 @@ app.post('/create_account', async (req, res) => {
 
     const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
     await DB_interact.add_user( USER );
-
-    localStorage.setItem('user', USER);
     
-    res.redirect("/");
+    res.redirect('/home/' + req.body.username.toLowerCase());
 });
 
 app.post('/get_user', async(req, res) => {

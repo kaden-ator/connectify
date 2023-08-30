@@ -4,8 +4,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     const group = get_group();
     const user = JSON.parse( localStorage.getItem('user') );
 
-    
-
 });
 
 // function will return the id of the current group
