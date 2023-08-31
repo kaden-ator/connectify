@@ -56,7 +56,7 @@ app.get('/create_account', (req, res) => {
 })
 
 app.get('/access_token', async (req, res) => {
-    
+
     const access_token = await Spotify_API.getAccessToken(req.query.code);
 
     // redirect user to creating account
@@ -110,5 +110,13 @@ app.post('/get_groups', async (req, res) => {
 
     res.json({ groups });
 })
+
+app.post('/get_top_user_songs', async (req, res) => {
+
+    const access_token = req.body.access_token;
+    const songs = await Spotify_API.getTopSongs(access_token);
+
+    res.json({ songs });
+});
 
 app.listen(3000);

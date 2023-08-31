@@ -1,5 +1,7 @@
 window.addEventListener('DOMContentLoaded', async () => {
 
+    const songs = await get_top_songs();
+
     // get group and user
     const group = get_group();
     const user = JSON.parse( localStorage.getItem('user') );
@@ -27,7 +29,37 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 function populate_songs(){
 
-    
+
+
+}
+
+async function get_top_songs(){
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const access_token = user.access_key
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch('/get_top_user_songs', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ access_token }) // username sent to be checked
+
+        });
+        try{
+
+            const songs = await response.json();
+            return songs;
+
+        }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
 
 }
 
