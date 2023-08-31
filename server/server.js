@@ -117,9 +117,6 @@ app.post('/get_top_user_songs', async (req, res) => {
     const access_token = req.body.access_token;
     const songs = await Spotify_API.getTopSongs(access_token);
 
-    console.log('get_top_user_songs: ' + songs);
-    console.log(songs);
-
     res.json({ songs });
 });
 
@@ -127,9 +124,6 @@ app.post('/get_library', async (req, res) => {
 
     const access_token = req.body.access_token;
     const songs = await Spotify_API.getSavedSongs(access_token);
-
-    console.log('get_library: ' + songs);
-    console.log(songs);
 
     res.json({ songs });
 });

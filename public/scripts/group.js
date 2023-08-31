@@ -1,7 +1,5 @@
 window.addEventListener('DOMContentLoaded', async () => {
 
-    const songs = await get_top_songs();
-
     // get group and user
     const group = get_group();
     const user = JSON.parse( localStorage.getItem('user') );
@@ -10,7 +8,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const hiddenPage = document.querySelector(".hidden-page");
     const footer = document.querySelector(".footer");
 
-    populate_songs();
+    await populate_songs();
 
     queueIcon.addEventListener("click", function () {
         // Toggle the position of the hidden page and the height of the footer
@@ -34,22 +32,30 @@ async function populate_songs(){
     song_type.innerHTML = 'Your top songs';
 
     const song_list = document.querySelector(".songs-list");
-    const songs = await get_top_songs().items;
+    var songs = await get_top_songs();
+
+    var library = false;
+    console.log(songs);
+
+    // get songs from library if no top songs
+    if(!songs.length){ songs = await get_library(); song_type.innerHTML = 'Your saved tracks'; library = true; }
 
     console.log(songs);
 
-    var library = false;
-
-    // get songs from library if no top songs
-    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your saved tracks'; library = true; }
+    // if no saved songs either, give no songs err message and return
+    if(!songs.length){ return; }
 
     // make element for each song, add to song list
     for(song of songs){
 
+        console.log(song);
+
+        // compile all data to be used from given track
         const song_name = song.track.name;
         const song_artists = song.track.artists.join(', ');
         const song_img_url = song.track.album.images[0].url;
 
+        // use all song data to create elements to display song
         const song_div = document.createElement('div');
         song_div.className = 'song';
 
@@ -66,12 +72,14 @@ async function populate_songs(){
         song_div.appendChild(name);
         song_div.appendChild(artists);
         
+        // add song to song-list div
         song_list.appendChild(song_div);
 
     }
 
 }
 
+// call server to interact with spotify api to get users top songs
 async function get_top_songs(){
 
     const user = JSON.parse(localStorage.getItem('user'));
@@ -97,6 +105,7 @@ async function get_top_songs(){
 
 }
 
+// call server to interact with spotify api to get users library
 async function get_library(){
 
     const user = JSON.parse(localStorage.getItem('user'));

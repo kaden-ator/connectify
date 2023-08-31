@@ -52,7 +52,7 @@ async function getTopSongs(access_token){
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
-        try{ return await response.json(); }
+        try{ return (await response.json()).items; }
         catch(err){ console.error('Error during parse:', err); }
     }
     catch(err){ console.error('Error during fetch:', err); }
@@ -71,7 +71,7 @@ async function getSavedSongs(access_token){
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
-        try{ return await response.json(); }
+        try{ return (await response.json()).items; }
         catch(err){ console.error('Error during parse:', err); }
     }
     catch(err){ console.error('Error during fetch:', err); }
