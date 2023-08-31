@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     lowercase_username: String,
     password: String,
     access_key: String,
+    refresh_key: String,
     groups: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Group"
@@ -32,7 +33,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // create user schema in mongoose
-function create_user(email, username, password, access_key){
+function create_user(email, username, password, access_key, refresh_key){
     
     return new User({
         email:   email.toLowerCase(),
@@ -40,6 +41,7 @@ function create_user(email, username, password, access_key){
         lowercase_username: username.toLowerCase(),
         password:   password,
         access_key: access_key,
+        refresh_key: refresh_key,
         groups: []
     });
 

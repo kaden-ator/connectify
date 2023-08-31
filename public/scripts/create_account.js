@@ -81,7 +81,9 @@ async function username_valid(username){
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    document.getElementById('code').value = query_params.get('code');
+    // save users access and refresh tokens for later use
+    document.getElementById('access_token').value = query_params.get('access_token');
+    document.getElementById('refresh_token').value = query_params.get('refresh_token');
 
     // check if entered email already exists
     document.getElementById('email').addEventListener('blur', async () => {

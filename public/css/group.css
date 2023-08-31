@@ -42,7 +42,14 @@ html, body {
     overflow: auto;
 }
 
-.top-song {
+.song-content{
+
+    display: flex;
+    flex-flow: column nowrap;
+
+}
+
+.song {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,11 +59,11 @@ html, body {
     transition: background-color 0.3s;
 }
 
-.top-song:hover {
+.song:hover {
     background-color: lightgray;
 }
 
-.top-song img {
+.song img {
     width: 100px;
     height: 100px;
     object-fit: cover;
@@ -67,6 +74,12 @@ html, body {
     flex-wrap: wrap;
     justify-content: flex-start;
     padding: 20px;
+}
+
+.song-type {
+
+    padding: 20px;
+
 }
 
 .footer {

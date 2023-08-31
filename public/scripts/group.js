@@ -10,8 +10,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     const hiddenPage = document.querySelector(".hidden-page");
     const footer = document.querySelector(".footer");
 
+    populate_songs();
+
     queueIcon.addEventListener("click", function () {
-        console.log(hiddenPage.style.display);
         // Toggle the position of the hidden page and the height of the footer
         if (hiddenPage.style.display === '') {
             hiddenPage.style.top = '40px';
@@ -27,9 +28,47 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-function populate_songs(){
+async function populate_songs(){
 
+    const song_type = document.querySelector(".song-type");
+    song_type.innerHTML = 'Your top songs';
 
+    const song_list = document.querySelector(".songs-list");
+    const songs = await get_top_songs().items;
+
+    console.log(songs);
+
+    var library = false;
+
+    // get songs from library if no top songs
+    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your saved tracks'; library = true; }
+
+    // make element for each song, add to song list
+    for(song of songs){
+
+        const song_name = song.track.name;
+        const song_artists = song.track.artists.join(', ');
+        const song_img_url = song.track.album.images[0].url;
+
+        const song_div = document.createElement('div');
+        song_div.className = 'song';
+
+        const name = document.createElement('p');
+        name.innerHTML = song_name;
+
+        const artists = document.createElement('p');
+        artists.innerHTML = song_artists;
+
+        const image = document.createElement('img');
+        image.src = song_img_url;
+
+        song_div.appendChild(image);
+        song_div.appendChild(name);
+        song_div.appendChild(artists);
+        
+        song_list.appendChild(song_div);
+
+    }
 
 }
 
@@ -49,12 +88,32 @@ async function get_top_songs(){
             body: JSON.stringify({ access_token }) // username sent to be checked
 
         });
-        try{
+        try{ return await response.json(); }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
 
-            const songs = await response.json();
-            return songs;
+    return null;
 
-        }
+}
+
+async function get_library(){
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const access_token = user.access_key
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch('/get_library', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ access_token }) // username sent to be checked
+
+        });
+        try{ return await response.json(); }
         catch(err){ console.error('Error during parse:', err); }
     }
     catch(err){ console.error('Error during fetch:', err); }

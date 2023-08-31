@@ -16,7 +16,7 @@ function makeAuthURL()
     });
 }
 
-async function getAccessToken(code){
+async function getTokens(code){
 
     // access token request required grant_type, code, and redirect
     const params = new URLSearchParams();
@@ -32,10 +32,14 @@ async function getAccessToken(code){
         },
         body: params
     });
-
     const data = await result.json();
 
-    return data.access_token;
+    // fill tokens arr with access and refresh token
+    var tokens = [];
+    tokens.push(data.access_token);
+    tokens.push(data.refresh_token);
+
+    return tokens;
 }
 
 async function getTopSongs(access_token){
@@ -57,4 +61,23 @@ async function getTopSongs(access_token){
 
 }
 
-module.exports = { getAccessToken, makeAuthURL, getTopSongs };
+async function getSavedSongs(access_token){
+
+    const SAVED_SONGS_URL = 'https://api.spotify.com/v1/me/tracks?limit=50';
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch(SAVED_SONGS_URL, {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        });
+        try{ return await response.json(); }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
+module.exports = { getTokens, makeAuthURL, getTopSongs, getSavedSongs };

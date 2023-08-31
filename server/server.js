@@ -57,11 +57,12 @@ app.get('/create_account', (req, res) => {
 
 app.get('/access_token', async (req, res) => {
 
-    const access_token = await Spotify_API.getAccessToken(req.query.code);
+    const tokens = await Spotify_API.getTokens(req.query.code);
 
     // redirect user to creating account
     res.redirect('/create_account.html?' + querystring.stringify({
-        code: access_token
+        access_token: tokens[0],
+        refresh_token: tokens[1]
     }));
 
 });
@@ -69,7 +70,7 @@ app.get('/access_token', async (req, res) => {
 // route will add the user to the database
 app.post('/create_account', async (req, res) => {
 
-    const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.code);
+    const USER = await DB_interact.create_user(req.body.email.toLowerCase(), req.body.username, req.body.pass, req.body.access_token, req.body.refresh_token);
     await DB_interact.add_user( USER );
     
     res.redirect('/home/' + req.body.username.toLowerCase());
@@ -115,6 +116,20 @@ app.post('/get_top_user_songs', async (req, res) => {
 
     const access_token = req.body.access_token;
     const songs = await Spotify_API.getTopSongs(access_token);
+
+    console.log('get_top_user_songs: ' + songs);
+    console.log(songs);
+
+    res.json({ songs });
+});
+
+app.post('/get_library', async (req, res) => {
+
+    const access_token = req.body.access_token;
+    const songs = await Spotify_API.getSavedSongs(access_token);
+
+    console.log('get_library: ' + songs);
+    console.log(songs);
 
     res.json({ songs });
 });
