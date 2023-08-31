@@ -75,6 +75,7 @@ async function getTracks(URL, access_token, refresh_token){
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
 
+        console.log(URL);
         console.log(response);
 
         try{ return await handleResponse(response, URL, access_token, refresh_token); }

@@ -112,7 +112,7 @@ app.post('/get_groups', async (req, res) => {
 app.post('/get_top_user_songs', async (req, res) => {
 
     // required params to execute API call
-    const top_songs_url = 'https://api.spotify.com/v1/me/tracks?limit=50';
+    const top_songs_url = 'https://api.spotify.com/v1/me/top/tracks?limit=50';
     const access_token = req.body.access_token;
     const refresh_token = req.body.refresh_token;
 

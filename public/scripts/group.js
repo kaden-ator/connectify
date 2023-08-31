@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const hiddenPage = document.querySelector('.hidden-page');
     const footer = document.querySelector('.footer');
 
-    await populate_songs();
+    populate_songs();
 
     queueIcon.addEventListener('click', function () {
         // Toggle the position of the hidden page and the height of the footer
@@ -32,28 +32,21 @@ async function populate_songs(){
     song_type.innerHTML = 'Your top songs';
 
     const song_list = document.querySelector('.songs-list');
-    var songs = await get_top_songs().items;
-
-    var library = false;
-    console.log(songs);
+    var songs = (await get_top_songs()).songs.items;
 
     // get songs from library if no top songs
-    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your saved tracks'; library = true; }
-
-    console.log(songs);
+    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your saved tracks'; }
 
     // if no saved songs either, give no songs err message and return
     if(!songs.length){ return; }
 
     // make element for each song, add to song list
-    for(song of songs){
-
-        console.log(song);
+    for(var song of songs){
 
         // compile all data to be used from given track
-        const song_name = song.track.name;
-        const song_artists = song.track.artists.join(', ');
-        const song_img_url = song.track.album.images[0].url;
+        const song_name = song.name;
+        const song_artists = (song.artists.map(object => object.name)).join(', ');
+        const song_img_url = song.album.images[0].url;
 
         // use all song data to create elements to display song
         const song_div = document.createElement('div');
