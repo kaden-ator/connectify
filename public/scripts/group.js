@@ -4,13 +4,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     const group = get_group();
     const user = JSON.parse( localStorage.getItem('user') );
 
-    const queueIcon = document.querySelector(".queue-icon");
-    const hiddenPage = document.querySelector(".hidden-page");
-    const footer = document.querySelector(".footer");
+    const queueIcon = document.querySelector('.queue-icon');
+    const hiddenPage = document.querySelector('.hidden-page');
+    const footer = document.querySelector('.footer');
 
     await populate_songs();
 
-    queueIcon.addEventListener("click", function () {
+    queueIcon.addEventListener('click', function () {
         // Toggle the position of the hidden page and the height of the footer
         if (hiddenPage.style.display === '') {
             hiddenPage.style.top = '40px';
@@ -28,17 +28,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 async function populate_songs(){
 
-    const song_type = document.querySelector(".song-type");
+    const song_type = document.querySelector('.song-type');
     song_type.innerHTML = 'Your top songs';
 
-    const song_list = document.querySelector(".songs-list");
-    var songs = await get_top_songs();
+    const song_list = document.querySelector('.songs-list');
+    var songs = await get_top_songs().items;
 
     var library = false;
     console.log(songs);
 
     // get songs from library if no top songs
-    if(!songs.length){ songs = await get_library(); song_type.innerHTML = 'Your saved tracks'; library = true; }
+    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your saved tracks'; library = true; }
 
     console.log(songs);
 

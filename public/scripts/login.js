@@ -57,7 +57,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if( username_is_valid ){ 
             
             // redirect user to www.URL.com/home/:username (lower case username for simplicity) ONLY IF VALID
-            const redirectURL = "http://localhost:3000/home/" + username.toLowerCase();
+            const redirectURL = 'http://localhost:3000/home/' + username.toLowerCase();
             login_form.action = redirectURL;
             
             // submit the form 
