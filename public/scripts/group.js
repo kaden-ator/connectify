@@ -25,6 +25,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 });
 
+function populate_songs(){
+
+    
+
+}
+
 // function will return the id of the current group
 function get_group(){
 

@@ -3,6 +3,7 @@ const Spotify_API = require('./spotify');
 const querystring = require('querystring');
 const path = require('path');
 const express = require('express');
+const { access } = require('fs');
 const app = express();
 
 app.use(express.static('../public'));
@@ -50,11 +51,20 @@ app.get('/spotify_redirect', (req, res) => {
 // route will create an account and link the user with their api verification key
 app.get('/create_account', (req, res) => {
 
-    res.redirect('/create_account.html?' + querystring.stringify({
-        code: req.query.code
-    }));
+    
 
 })
+
+app.get('/access_token', async (req, res) => {
+    
+    const access_token = await Spotify_API.getAccessToken(req.query.code);
+
+    // redirect user to creating account
+    res.redirect('/create_account.html?' + querystring.stringify({
+        code: access_token
+    }));
+
+});
 
 // route will add the user to the database
 app.post('/create_account', async (req, res) => {

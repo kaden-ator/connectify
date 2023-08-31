@@ -37,8 +37,36 @@ html, body {
     width: 90%;
     height: 100vh;
     display: hidden;
-    background-color: white; /* Set the background color of the new page */
+    background-color: lightblue; /* Set the background color of the new page */
     transition: top 0.5s; /* Apply a smooth transition */
+    overflow: auto;
+}
+
+.top-song {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.top-song:hover {
+    background-color: lightgray;
+}
+
+.top-song img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.song-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 20px;
 }
 
 .footer {
