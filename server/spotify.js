@@ -1,4 +1,4 @@
-const { access } = require('fs');
+const DB_interact = require('./mongoose');
 const querystring = require('querystring');
 require('dotenv').config
 
@@ -20,15 +20,15 @@ async function getTokens(code){
 
     // access token request required grant_type, code, and redirect
     const params = new URLSearchParams();
-    params.append("grant_type", "authorization_code");
-    params.append("code", code);
-    params.append("redirect_uri", AUTH_REDIRECT_URI);
+    params.append('grant_type', 'authorization_code');
+    params.append('code', code);
+    params.append('redirect_uri', AUTH_REDIRECT_URI);
 
-    const result = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
+    const result = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
         headers: { 
             'Authorization': 'Basic ' + AUTH,
-            'Content-Type': "application/x-www-form-urlencoded" 
+            'Content-Type': 'application/x-www-form-urlencoded' 
         },
         body: params
     });
@@ -42,17 +42,42 @@ async function getTokens(code){
     return tokens;
 }
 
-async function getTopSongs(access_token){
+async function refreshAccessToken(refresh_token){
 
-    const TOP_SONG_URL = 'https://api.spotify.com/v1/me/top/tracks?limit=50&offset=0&time_range=short_term';
+    const params = new URLSearchParams();
+    params.append('grant_type', 'refresh_token');
+    params.append('refresh_token', refresh_token);
+
+    const result = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: { 
+            'Authorization': 'Basic ' + AUTH,
+            'Content-Type': 'application/x-www-form-urlencoded' 
+        },
+        body: params
+    });
+    const data = await result.json();
+
+    // new access token
+    const new_token = data.access_token;
+    await DB_interact.update_access_token(new_token, refresh_token);
+
+    return new_token;
+
+}
+
+async function getTracks(URL, access_token, refresh_token){
 
     try{
         // fetch from validate_username in server.js
-        const response = await fetch(TOP_SONG_URL, {
+        const response = await fetch(URL, {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
-        try{ return (await response.json()).items; }
+
+        console.log(response);
+
+        try{ return await handleResponse(response, URL, access_token, refresh_token); }
         catch(err){ console.error('Error during parse:', err); }
     }
     catch(err){ console.error('Error during fetch:', err); }
@@ -61,23 +86,22 @@ async function getTopSongs(access_token){
 
 }
 
-async function getSavedSongs(access_token){
+async function handleResponse(response, URL, access_token, refresh_token){
+    
+    // successful response, return data
+    if(response.status === 200){ return await response.json(); }
+    
+    // access token expired reponse, refresh token, return new call on previous response
+    else if(response.status === 401){ 
 
-    const SAVED_SONGS_URL = 'https://api.spotify.com/v1/me/tracks?limit=50';
+        const new_access_token = await refreshAccessToken(refresh_token); 
+        return await getTracks(URL, new_access_token, refresh_token);
 
-    try{
-        // fetch from validate_username in server.js
-        const response = await fetch(SAVED_SONGS_URL, {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + access_token }
-        });
-        try{ return (await response.json()).items; }
-        catch(err){ console.error('Error during parse:', err); }
     }
-    catch(err){ console.error('Error during fetch:', err); }
-
-    return null;
+    
+    // bad response, log status and return null
+    else{ console.log("ERR - Response Status: " + response.status); return null; }
 
 }
 
-module.exports = { getTokens, makeAuthURL, getTopSongs, getSavedSongs };
+module.exports = { getTokens, makeAuthURL, getTracks };

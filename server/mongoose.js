@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     refresh_key: String,
     groups: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Group"
+        ref: 'Group'
     }]
 
 });     
@@ -98,8 +98,12 @@ async function get_users_groups(username){
     return groups;
 }
 
-// clear db [ REMOVE UPON COMPLETION ]
-async function clear_db(){ for( user of await User.find({}) ){ await User.deleteOne({ _id: user._id }); } }
+// update access_token in database
+async function update_access_token(access_token, refresh_token){ 
+
+    await User.findOneAndUpdate( { refresh_key: refresh_token }, { access_key: access_token }, { new: true } );
+    
+}
 
 
 /**************************************************************************************************************/
@@ -113,11 +117,11 @@ const groupSchema = new mongoose.Schema({
     spotify_port: String,
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: 'User'
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: 'User'
     }]
 
 });
@@ -153,4 +157,4 @@ async function join_group(user_id, group_id){
 
 }
 
-module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, clear_db, create_group, add_group, join_group }
+module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group }

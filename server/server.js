@@ -12,9 +12,6 @@ app.use(express.json());
 
 app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
-// route to get only for development purposes - Clears database
-app.get('/delete_all', (req, res) => { DB_interact.clear_db(); res.redirect('/'); });
-
 // route to homepage for user - all user groups will be displayed
 app.get('/home/:username', (req, res) => {
 
@@ -25,7 +22,7 @@ app.get('/home/:username', (req, res) => {
 });
 
 // redirect to get method for home after successful login attempt
-app.post('/home/:username', (req, res) => { res.redirect("/home/" + req.params.username); });
+app.post('/home/:username', (req, res) => { res.redirect('/home/' + req.params.username); });
 
 // route to group page
 app.get('/group/:group_id', (req, res) => {
@@ -114,16 +111,24 @@ app.post('/get_groups', async (req, res) => {
 
 app.post('/get_top_user_songs', async (req, res) => {
 
+    // required params to execute API call
+    const top_songs_url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     const access_token = req.body.access_token;
-    const songs = await Spotify_API.getTopSongs(access_token);
+    const refresh_token = req.body.refresh_token;
+
+    const songs = await Spotify_API.getTracks(top_songs_url, access_token, refresh_token);
 
     res.json({ songs });
 });
 
 app.post('/get_library', async (req, res) => {
 
+    // required params to execute API call
+    const lib_songs_url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     const access_token = req.body.access_token;
-    const songs = await Spotify_API.getSavedSongs(access_token);
+    const refresh_token = req.body.refresh_token;
+
+    const songs = await Spotify_API.getTracks(lib_songs_url, access_token, refresh_token);
 
     res.json({ songs });
 });
