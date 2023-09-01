@@ -157,4 +157,48 @@ async function join_group(user_id, group_id){
 
 }
 
-module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group }
+/**************************************************************************************************************/
+/*                                      SUGGESTION SCHEMA FUNCTIONS                                           */
+/**************************************************************************************************************/
+
+// hold group as an object containing the name, port, owner, and members of group
+const suggestionSchema = new mongoose.Schema({
+
+    song_id: String,
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group'
+    },
+    suggestion_user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+
+});
+
+const Suggestion = mongoose.model('Suggestion', suggestionSchema);
+
+// create user schema in mongoose
+function create_suggestion(song_id, group_id, user_id){
+
+    const group = Group.findById(group_id);
+    const user = User.findById(user_id);
+    
+    return new Suggestion({
+        song_id: song_id,
+        group: group,
+        suggestion_user: user
+    });
+
+}
+
+// add user to DB
+async function add_suggestion(suggestion){
+
+    // .save adds user to db
+    try{ suggestion.save(); }
+    catch(err){ console.log(err.message); }
+
+}
+
+module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group, create_suggestion, add_suggestion }

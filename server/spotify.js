@@ -50,12 +50,10 @@ async function refreshAccessToken(refresh_token){
 
     const result = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
-        headers: { 
-            'Authorization': 'Basic ' + AUTH,
-            'Content-Type': 'application/x-www-form-urlencoded' 
-        },
+        headers: { 'Authorization': 'Basic ' + AUTH },
         body: params
     });
+
     const data = await result.json();
 
     // new access token
@@ -75,9 +73,6 @@ async function getTracks(URL, access_token, refresh_token){
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
 
-        console.log(URL);
-        console.log(response);
-
         try{ return await handleResponse(response, URL, access_token, refresh_token); }
         catch(err){ console.error('Error during parse:', err); }
     }
@@ -87,7 +82,7 @@ async function getTracks(URL, access_token, refresh_token){
 
 }
 
-async function handleResponse(response, URL, access_token, refresh_token){
+async function handleResponse(response, URL, refresh_token){
     
     // successful response, return data
     if(response.status === 200){ return await response.json(); }
