@@ -22,9 +22,7 @@ async function get_user(username){
         const response = await fetch('/get_user', {
 
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username })
 
         });

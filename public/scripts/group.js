@@ -1,31 +1,81 @@
 window.addEventListener('DOMContentLoaded', async () => {
 
     // get group and user
+    const username = (JSON.parse(localStorage.getItem('user'))).lowercase_username;
     const group = get_group();
-    const user = JSON.parse( localStorage.getItem('user') );
+    const user = await get_user(username);
 
+    // update user in local storage
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // html elements
     const queueIcon = document.querySelector('.queue-icon');
-    const hiddenPage = document.querySelector('.hidden-page');
+    const hiddenSongPage = document.querySelector('.hidden-song-page');
+    const hiddenQueuePage = document.querySelector('.hidden-queue-page');
     const footer = document.querySelector('.footer');
+    const suggestionBar = document.querySelector('.suggestion-bar');
 
+    // populate hidden page
     populate_songs();
 
-    queueIcon.addEventListener('click', function () {
+    // event listener to toggle song suggestion page
+    queueIcon.addEventListener('click', () => {
+
         // Toggle the position of the hidden page and the height of the footer
-        if (hiddenPage.style.display === '') {
-            hiddenPage.style.top = '40px';
+        if(hiddenSongPage.style.display === '') {
+            suggestionBar.style.top = '-100vh';
+            hiddenSongPage.style.top = '40px';
             footer.style.bottom = 'calc(100vh - 40px)';
-            hiddenPage.style.display = 'block';
+            hiddenSongPage.style.display = 'block';
         } 
         else{
-            hiddenPage.style.top = '100vh';
+            suggestionBar.style.top = '0';
+            hiddenSongPage.style.top = '100vh';
             footer.style.bottom = '0';
-            hiddenPage.style.display = '';
+            hiddenSongPage.style.display = '';
         }
+    });
+
+    suggestionBar.addEventListener('click', () => {
+        
+        // Toggle the position of the hidden page and the positon of the suggestion bar
+        if(hiddenQueuePage.style.display === '') {
+            suggestionBar.style.right = '90%';
+            hiddenQueuePage.style.right = '0';
+            hiddenQueuePage.style.display = 'block';
+        } 
+        else{
+            suggestionBar.style.right = '0';
+            hiddenQueuePage.style.right = '-100%';
+            hiddenQueuePage.style.display = '';
+        }
+
     });
 
 });
 
+async function get_user(username){
+
+    try{
+        // fetch from get_user in server.js by username
+        const response = await fetch('/get_user', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+
+        });
+
+        try{ const data = await response.json(); return data.user; }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
+// populate the song suggestion page with top user songs or user library
 async function populate_songs(){
 
     const song_type = document.querySelector('.song-type');
@@ -35,7 +85,7 @@ async function populate_songs(){
     var songs = (await get_top_songs()).songs.items;
 
     // get songs from library if no top songs
-    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your saved tracks'; }
+    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your liked songs'; }
 
     // if no saved songs either, give no songs err message and return
     if(!songs.length){ return; }
@@ -76,7 +126,9 @@ async function populate_songs(){
 async function get_top_songs(){
 
     const user = JSON.parse(localStorage.getItem('user'));
-    const access_token = user.access_key
+
+    const access_token = user.access_key;
+    const refresh_token = user.refresh_key;
 
     try{
         // fetch from validate_username in server.js
@@ -86,7 +138,7 @@ async function get_top_songs(){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ access_token }) // username sent to be checked
+            body: JSON.stringify({ access_token, refresh_token }) // username sent to be checked
 
         });
         try{ return await response.json(); }
@@ -102,7 +154,9 @@ async function get_top_songs(){
 async function get_library(){
 
     const user = JSON.parse(localStorage.getItem('user'));
-    const access_token = user.access_key
+
+    const access_token = user.access_key;
+    const refresh_token = user.refresh_key;
 
     try{
         // fetch from validate_username in server.js
@@ -112,7 +166,7 @@ async function get_library(){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ access_token }) // username sent to be checked
+            body: JSON.stringify({ access_token, refresh_token }) // username sent to be checked
 
         });
         try{ return await response.json(); }
