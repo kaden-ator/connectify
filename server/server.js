@@ -75,7 +75,7 @@ app.post('/create_account', async (req, res) => {
 
 app.post('/get_user', async(req, res) => {
 
-    username = req.body.username;
+    const username = req.body.username;
     const user = await DB_interact.get_user_by_name(username);
 
     res.json({ user });
@@ -85,7 +85,7 @@ app.post('/get_user', async(req, res) => {
 // route will validate that a given email is in the database
 app.post('/validate_email', async (req, res) => {
 
-    email = req.body.email.toLowerCase();
+    const email = req.body.email.toLowerCase();
     const email_exists = await DB_interact.email_exists(email);
 
     res.json({ email_exists });
@@ -94,7 +94,7 @@ app.post('/validate_email', async (req, res) => {
 // route will validate that a given username is in the database
 app.post('/validate_username', async (req, res) => {
 
-    username = req.body.username.toLowerCase();
+    const username = req.body.username.toLowerCase();
     const username_exists = await DB_interact.username_exists(username);
 
     res.json({ username_exists });
@@ -103,10 +103,19 @@ app.post('/validate_username', async (req, res) => {
 // route will get all groups from a user
 app.post('/get_groups', async (req, res) => {
 
-    user = req.body.user;
+    const user = req.body.user;
     const groups = await DB_interact.get_users_groups(user);
 
     res.json({ groups });
+})
+
+// route will get all suggestions from a group
+app.post('/get_suggestions', async (req, res) => {
+
+    const group_id = req.body.group_id;
+    const suggestions = await DB_interact.get_suggestions(group_id);
+
+    res.json({ suggestions });
 })
 
 app.post('/get_top_user_songs', async (req, res) => {

@@ -91,7 +91,7 @@ async function handleResponse(response, URL, user_id, refresh_token){
     else if(response.status === 401){ 
 
         const new_access_token = await refreshAccessToken(user_id, refresh_token); 
-        return await getTracks(URL, new_access_token, refresh_token);
+        return await getTracks(URL, user_id, new_access_token, refresh_token);
 
     }
     

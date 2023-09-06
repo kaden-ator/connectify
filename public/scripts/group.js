@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // get group and user
     const username = (JSON.parse(localStorage.getItem('user'))).lowercase_username;
-    const group = get_group();
+    const group_id = get_group_id();
     const user = await get_user(username);
 
     // update user in local storage
@@ -181,7 +181,7 @@ async function get_library(){
 }
 
 // function will return the id of the current group
-function get_group(){
+function get_group_id(){
 
     const url = window.location.href;
     const paths = url.split('/');
@@ -190,3 +190,69 @@ function get_group(){
     return paths[paths.length - 1];
 
 }
+
+async function get_suggestions(){
+
+    const group_id = get_group_id();
+
+    try{
+        const response = await fetch('/get_suggestions', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ group_id })
+
+        });
+
+        try{ const data = await response.json(); return data.suggestions; }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
+async function displaySuggestions() {
+    const suggestions = await get_suggestions();
+  
+    // Get a reference to the hidden-queue-page
+    const hiddenQueuePage = document.querySelector('.hidden-queue-page');
+  
+    // Clear any existing suggestions on the page
+    hiddenQueuePage.innerHTML = '';
+  
+    // Loop through the suggestions and create HTML elements for each one
+    for(suggestion of suggestions){
+        const { status, song_id, user } = suggestion;
+  
+        // Fetch song details using Spotify_API.getTrack(song_id)
+        const songDetails = await Spotify_API.getTrack(song_id);
+  
+        // Create a suggestion element
+        const suggestionElement = document.createElement('div');
+        suggestionElement.className = 'suggestion';
+  
+        // Create elements to display username, album cover, song name, and status
+        const usernameElement = document.createElement('p');
+        usernameElement.textContent = user.username; // Replace with the actual property holding the username
+  
+        const albumCoverElement = document.createElement('img');
+        albumCoverElement.src = songDetails.album.images[0].url;
+  
+        const songNameElement = document.createElement('p');
+        songNameElement.textContent = songDetails.name;
+  
+        const statusElement = document.createElement('p');
+        statusElement.textContent = status;
+  
+        // Append elements to the suggestion element
+        suggestionElement.appendChild(usernameElement);
+        suggestionElement.appendChild(albumCoverElement);
+        suggestionElement.appendChild(songNameElement);
+        suggestionElement.appendChild(statusElement);
+  
+        // Append the suggestion element to the hidden-queue-page
+        hiddenQueuePage.appendChild(suggestionElement);
+    }
+  }

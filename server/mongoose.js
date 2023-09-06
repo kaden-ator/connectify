@@ -130,6 +130,10 @@ const groupSchema = new mongoose.Schema({
     members: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    }],
+    suggestions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Suggestion'
     }]
 
 });
@@ -165,6 +169,13 @@ async function join_group(user_id, group_id){
 
 }
 
+async function get_suggestions(group_id){
+
+    const group = await Group.findById(group_id);
+    return group.suggestions;
+
+}
+
 /**************************************************************************************************************/
 /*                                      SUGGESTION SCHEMA FUNCTIONS                                           */
 /**************************************************************************************************************/
@@ -172,6 +183,7 @@ async function join_group(user_id, group_id){
 // hold group as an object containing the name, port, owner, and members of group
 const suggestionSchema = new mongoose.Schema({
 
+    status: String,
     song_id: String,
     group: {
         type: mongoose.Schema.Types.ObjectId,
@@ -188,14 +200,12 @@ const Suggestion = mongoose.model('Suggestion', suggestionSchema);
 
 // create user schema in mongoose
 function create_suggestion(song_id, group_id, user_id){
-
-    const group = Group.findById(group_id);
-    const user = User.findById(user_id);
     
     return new Suggestion({
+        status: 'pending',
         song_id: song_id,
-        group: group,
-        suggestion_user: user
+        group: group_id,
+        suggestion_user: user_id
     });
 
 }
@@ -209,4 +219,4 @@ async function add_suggestion(suggestion){
 
 }
 
-module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group, create_suggestion, add_suggestion }
+module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group, get_suggestions, create_suggestion, add_suggestion }
