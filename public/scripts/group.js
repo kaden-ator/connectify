@@ -15,39 +15,36 @@ window.addEventListener('DOMContentLoaded', async () => {
     const footer = document.querySelector('.footer');
     const suggestionBar = document.querySelector('.suggestion-bar');
 
-    // populate hidden page
+    // populate hidden pages
     populate_songs();
+    display_suggestions();
 
     // event listener to toggle song suggestion page
     queueIcon.addEventListener('click', () => {
 
         // Toggle the position of the hidden page and the height of the footer
-        if(hiddenSongPage.style.display === '') {
+        if(hiddenSongPage.style.top === '100vh') {
             suggestionBar.style.top = '-100vh';
             hiddenSongPage.style.top = '40px';
             footer.style.bottom = 'calc(100vh - 40px)';
-            hiddenSongPage.style.display = 'block';
         } 
         else{
             suggestionBar.style.top = '0';
             hiddenSongPage.style.top = '100vh';
             footer.style.bottom = '0';
-            hiddenSongPage.style.display = '';
         }
     });
 
     suggestionBar.addEventListener('click', () => {
         
         // Toggle the position of the hidden page and the positon of the suggestion bar
-        if(hiddenQueuePage.style.display === '') {
+        if(hiddenQueuePage.style.right === '-100%') {
             suggestionBar.style.right = '90%';
             hiddenQueuePage.style.right = '0';
-            hiddenQueuePage.style.display = 'block';
         } 
         else{
             suggestionBar.style.right = '0';
             hiddenQueuePage.style.right = '-100%';
-            hiddenQueuePage.style.display = '';
         }
 
     });
@@ -122,6 +119,34 @@ async function populate_songs(){
 
 }
 
+async function get_track_by_id(song_id){
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const user_id = user._id;
+    const access_token = user.access_key;
+    const refresh_token = user.refresh_key;
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch('/get_track_by_id', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ song_id, user_id, access_token, refresh_token }) // username sent to be checked
+
+        });
+        try{ return await response.json(); }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
 // call server to interact with spotify api to get users top songs
 async function get_top_songs(){
 
@@ -191,6 +216,7 @@ function get_group_id(){
 
 }
 
+
 async function get_suggestions(){
 
     const group_id = get_group_id();
@@ -213,21 +239,20 @@ async function get_suggestions(){
 
 }
 
-async function displaySuggestions() {
+async function display_suggestions() {
     const suggestions = await get_suggestions();
   
     // Get a reference to the hidden-queue-page
-    const hiddenQueuePage = document.querySelector('.hidden-queue-page');
+    const queue = document.querySelector('.queue-content');
   
     // Clear any existing suggestions on the page
-    hiddenQueuePage.innerHTML = '';
+    queue.innerHTML = '';
   
     // Loop through the suggestions and create HTML elements for each one
-    for(suggestion of suggestions){
+    for(var suggestion of suggestions){
         const { status, song_id, user } = suggestion;
-  
-        // Fetch song details using Spotify_API.getTrack(song_id)
-        const songDetails = await Spotify_API.getTrack(song_id);
+
+        const song = await get_track_by_id(song_id);
   
         // Create a suggestion element
         const suggestionElement = document.createElement('div');
@@ -238,10 +263,10 @@ async function displaySuggestions() {
         usernameElement.textContent = user.username; // Replace with the actual property holding the username
   
         const albumCoverElement = document.createElement('img');
-        albumCoverElement.src = songDetails.album.images[0].url;
+        albumCoverElement.src = song.album.images[0].url;
   
         const songNameElement = document.createElement('p');
-        songNameElement.textContent = songDetails.name;
+        songNameElement.textContent = song.name;
   
         const statusElement = document.createElement('p');
         statusElement.textContent = status;
@@ -253,6 +278,6 @@ async function displaySuggestions() {
         suggestionElement.appendChild(statusElement);
   
         // Append the suggestion element to the hidden-queue-page
-        hiddenQueuePage.appendChild(suggestionElement);
+        queue.appendChild(suggestionElement);
     }
   }
