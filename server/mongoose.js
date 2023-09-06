@@ -171,8 +171,22 @@ async function join_group(user_id, group_id){
 
 async function get_suggestions(group_id){
 
-    const group = await Group.findById(group_id);
-    return group.suggestions;
+    const suggestion_ids = (await Group.findById(group_id)).suggestions;
+    var suggestions = [];
+
+    for(var suggestion_id of suggestion_ids){
+
+        const suggestion = await Suggestion.findById(suggestion_id);
+
+        const status = suggestion.status;
+        const song_id = suggestion.song_id;
+        const group = await Group.findById(suggestion.group);
+        const user = await User.findById(suggestion.suggestion_user);
+
+        suggestions.push({status: status, song_id: song_id, group: group, user: user});
+    }
+
+    return suggestions;
 
 }
 

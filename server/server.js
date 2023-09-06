@@ -118,6 +118,19 @@ app.post('/get_suggestions', async (req, res) => {
     res.json({ suggestions });
 })
 
+app.post('/get_track_by_id', async (req, res) => {
+
+    // required params to execute API call
+    const get_track_by_id_url = 'https://api.spotify.com/v1/tracks/' + req.body.song_id;
+    const user_id = req.body.user_id;
+    const access_token = req.body.access_token;
+    const refresh_token = req.body.refresh_token;
+
+    const song = await Spotify_API.getTracks(get_track_by_id_url, user_id, access_token, refresh_token);
+
+    res.json( song );
+});
+
 app.post('/get_top_user_songs', async (req, res) => {
 
     // required params to execute API call
