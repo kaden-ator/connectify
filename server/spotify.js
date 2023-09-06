@@ -42,7 +42,7 @@ async function getTokens(code){
     return tokens;
 }
 
-async function refreshAccessToken(refresh_token){
+async function refreshAccessToken(user_id, refresh_token){
 
     const params = new URLSearchParams();
     params.append('grant_type', 'refresh_token');
@@ -58,13 +58,13 @@ async function refreshAccessToken(refresh_token){
 
     // new access token
     const new_token = data.access_token;
-    await DB_interact.update_access_token(new_token, refresh_token);
+    await DB_interact.update_access_token(user_id, new_token);
 
     return new_token;
 
 }
 
-async function getTracks(URL, access_token, refresh_token){
+async function getTracks(URL, user_id, access_token, refresh_token){
 
     try{
         // fetch from validate_username in server.js
@@ -73,7 +73,7 @@ async function getTracks(URL, access_token, refresh_token){
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
 
-        try{ return await handleResponse(response, URL, access_token, refresh_token); }
+        try{ return await handleResponse(response, URL, user_id, refresh_token); }
         catch(err){ console.error('Error during parse:', err); }
     }
     catch(err){ console.error('Error during fetch:', err); }
@@ -82,7 +82,7 @@ async function getTracks(URL, access_token, refresh_token){
 
 }
 
-async function handleResponse(response, URL, refresh_token){
+async function handleResponse(response, URL, user_id, refresh_token){
     
     // successful response, return data
     if(response.status === 200){ return await response.json(); }
@@ -90,7 +90,7 @@ async function handleResponse(response, URL, refresh_token){
     // access token expired reponse, refresh token, return new call on previous response
     else if(response.status === 401){ 
 
-        const new_access_token = await refreshAccessToken(refresh_token); 
+        const new_access_token = await refreshAccessToken(user_id, refresh_token); 
         return await getTracks(URL, new_access_token, refresh_token);
 
     }

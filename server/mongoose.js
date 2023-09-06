@@ -99,9 +99,17 @@ async function get_users_groups(username){
 }
 
 // update access_token in database
-async function update_access_token(access_token, refresh_token){ 
+async function update_access_token(user_id, new_token){ 
 
-    await User.findOneAndUpdate( { refresh_key: refresh_token }, { access_key: access_token }, { new: true } );
+    try{
+        const updatedUser = await User.findByIdAndUpdate(
+            user_id,
+            { $set: { access_key: new_token } },
+            { new: true }
+        );
+        console.log('Updated user:', updatedUser);
+    } 
+    catch (err){ console.error('Error updating user:', err); }
     
 }
 

@@ -113,10 +113,11 @@ app.post('/get_top_user_songs', async (req, res) => {
 
     // required params to execute API call
     const top_songs_url = 'https://api.spotify.com/v1/me/top/tracks?limit=50';
+    const user_id = req.body.user_id;
     const access_token = req.body.access_token;
     const refresh_token = req.body.refresh_token;
 
-    const songs = await Spotify_API.getTracks(top_songs_url, access_token, refresh_token);
+    const songs = await Spotify_API.getTracks(top_songs_url, user_id, access_token, refresh_token);
 
     res.json({ songs });
 });
@@ -125,10 +126,11 @@ app.post('/get_library', async (req, res) => {
 
     // required params to execute API call
     const lib_songs_url = 'https://api.spotify.com/v1/me/tracks?limit=50';
+    const user_id = req.body.user_id;
     const access_token = req.body.access_token;
     const refresh_token = req.body.refresh_token;
 
-    const songs = await Spotify_API.getTracks(lib_songs_url, access_token, refresh_token);
+    const songs = await Spotify_API.getTracks(lib_songs_url, user_id, access_token, refresh_token);
 
     res.json({ songs });
 });

@@ -127,6 +127,7 @@ async function get_top_songs(){
 
     const user = JSON.parse(localStorage.getItem('user'));
 
+    const user_id = user._id;
     const access_token = user.access_key;
     const refresh_token = user.refresh_key;
 
@@ -138,7 +139,7 @@ async function get_top_songs(){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ access_token, refresh_token }) // username sent to be checked
+            body: JSON.stringify({ user_id, access_token, refresh_token }) // username sent to be checked
 
         });
         try{ return await response.json(); }
@@ -155,6 +156,7 @@ async function get_library(){
 
     const user = JSON.parse(localStorage.getItem('user'));
 
+    const user_id = user._id;
     const access_token = user.access_key;
     const refresh_token = user.refresh_key;
 
@@ -166,7 +168,7 @@ async function get_library(){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ access_token, refresh_token }) // username sent to be checked
+            body: JSON.stringify({ user_id, access_token, refresh_token }) // username sent to be checked
 
         });
         try{ return await response.json(); }
