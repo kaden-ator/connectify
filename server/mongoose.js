@@ -102,12 +102,11 @@ async function get_users_groups(username){
 async function update_access_token(user_id, new_token){ 
 
     try{
-        const updatedUser = await User.findByIdAndUpdate(
+        await User.findByIdAndUpdate(
             user_id,
             { $set: { access_key: new_token } },
             { new: true }
         );
-        console.log('Updated user:', updatedUser);
     } 
     catch (err){ console.error('Error updating user:', err); }
     
@@ -227,8 +226,18 @@ function create_suggestion(song_id, group_id, user_id){
 // add user to DB
 async function add_suggestion(suggestion){
 
-    // .save adds user to db
-    try{ suggestion.save(); }
+    try{ 
+        // save suggestion to db for finding by id in future
+        await suggestion.save(); 
+        try{
+            await Group.findByIdAndUpdate(
+                suggestion.group,
+                { $push: { suggestions: suggestion._id } },
+                { new: true }
+            );
+        } 
+        catch (err){ console.error('Error updating group:', err); }
+    }
     catch(err){ console.log(err.message); }
 
 }

@@ -157,4 +157,16 @@ app.post('/get_library', async (req, res) => {
     res.json({ songs });
 });
 
+app.post('/add_suggestion', async (req, res) => {
+
+    // required params to execute API call
+    const song_id = req.body.song_id;
+    const group_id = req.body.group_id;
+    const user_id = req.body.user_id;
+
+    await DB_interact.add_suggestion( DB_interact.create_suggestion( song_id, group_id, user_id ) );
+
+    res.json({});
+});
+
 app.listen(3000);

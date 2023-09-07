@@ -16,8 +16,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     const suggestionBar = document.querySelector('.suggestion-bar');
 
     // populate hidden pages
-    populate_songs();
-    display_suggestions();
+    await populate_songs();
+    await display_suggestions();
 
     // event listener to toggle song suggestion page
     queueIcon.addEventListener('click', () => {
@@ -49,7 +49,38 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     });
 
+    const suggestionButtons = document.querySelectorAll('.suggest-to-queue-button');
+    for(var button of suggestionButtons){
+
+        button.addEventListener('click', async () => {
+
+            // get required variables to create suggestion
+            const song_id = (button.parentElement.querySelector('.hidden-id')).innerHTML;
+            const group_id = get_group_id();
+            const user_id = (JSON.parse(localStorage.getItem('user')))._id;
+
+            await add_suggestion(song_id, group_id, user_id);
+
+        });
+
+    }
+
 });
+
+async function add_suggestion(song_id, group_id, user_id){
+
+    try{
+        await fetch('/add_suggestion', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ song_id, group_id, user_id })
+
+        });
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+}
 
 async function get_user(username){
 
@@ -94,10 +125,16 @@ async function populate_songs(){
         const song_name = song.name;
         const song_artists = (song.artists.map(object => object.name)).join(', ');
         const song_img_url = song.album.images[0].url;
+        const song_id = song.id
 
         // use all song data to create elements to display song
         const song_div = document.createElement('div');
         song_div.className = 'song';
+
+        const id = document.createElement('div');
+        id.className = 'hidden-id';
+        id.innerHTML = song_id;
+        id.style.display = 'none';
 
         const name = document.createElement('p');
         name.innerHTML = song_name;
@@ -108,9 +145,15 @@ async function populate_songs(){
         const image = document.createElement('img');
         image.src = song_img_url;
 
+        const button = document.createElement('button');
+        button.innerHTML = 'Suggest';
+        button.className = 'suggest-to-queue-button'
+
+        song_div.appendChild(id);
         song_div.appendChild(image);
         song_div.appendChild(name);
         song_div.appendChild(artists);
+        song_div.appendChild(button);
         
         // add song to song-list div
         song_list.appendChild(song_div);

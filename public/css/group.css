@@ -170,3 +170,16 @@ html, body {
     max-height: 100%; /* Allow the queue to take up all available height */
     overflow: hidden; /* Hide overflow when suggestions surpass the top of the screen */
 }
+
+.suggest-to-queue-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.suggest-to-queue-button:hover {
+    background-color: #0056b3;
+}
