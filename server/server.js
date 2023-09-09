@@ -169,4 +169,19 @@ app.post('/add_suggestion', async (req, res) => {
     res.json({});
 });
 
+app.post('/spotify_api_interact', async (req, res) => {
+
+    const URL = req.body.url; 
+    const user_id = req.body.user_id;
+    const access_token = req.body.access_token;
+    const refresh_token = req.body.refresh_token;
+
+    const data = await Spotify_API.getTracks(URL, user_id, access_token, refresh_token);
+
+    console.log(data);
+
+    res.json({ data });
+
+})
+
 app.listen(3000);
