@@ -12,7 +12,7 @@ function makeAuthURL()
         client_id:  process.env.CLIENT_ID,
         response_type:  'code',
         redirect_uri:   encodeURI(AUTH_REDIRECT_URI),
-        scope: 'user-read-private user-read-email user-library-read user-read-playback-state user-modify-playback-state user-read-playback-state user-top-read'
+        scope: 'user-read-private user-read-email user-library-read user-read-playback-state user-modify-playback-state user-top-read'
     });
 }
 
@@ -65,6 +65,11 @@ async function refreshAccessToken(user_id, refresh_token){
 }
 
 async function getTracks(URL, user_id, access_token, refresh_token){
+
+    console.log(URL);
+    console.log(user_id);
+    console.log(access_token);
+    console.log(refresh_token);
 
     try{
         // fetch from validate_username in server.js

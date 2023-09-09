@@ -24,7 +24,7 @@ html, body {
     flex-direction: column;
 }
 
-.content {
+.playback-queue-content {
     flex: 1; /* Fill available space */
     background-color: lightgray;
     padding: 20px; /* Add some padding for content */
@@ -182,4 +182,25 @@ html, body {
 
 .suggest-to-queue-button:hover {
     background-color: #0056b3;
+}
+
+.playback-queue-element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.playback-queue-element:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+.playback-queue-element img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
 }

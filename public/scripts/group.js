@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const suggestionBar = document.querySelector('.suggestion-bar');
 
     // populate hidden pages
+    //await display_playback_queue();
     await populate_songs();
     await display_suggestions();
 
@@ -219,6 +220,33 @@ async function get_top_songs(){
 
 }
 
+async function fetch_spotify(url){
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const user_id = user._id;
+    const access_token = user.access_key;
+    const refresh_token = user.refresh_key;
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch('/spotify_api_interact', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, user_id, access_token, refresh_token }) // username sent to be checked
+
+        });
+        try{ return await response.json(); }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+
+}
+
 // call server to interact with spotify api to get users library
 async function get_library(){
 
@@ -323,4 +351,44 @@ async function display_suggestions() {
         // Append the suggestion element to the hidden-queue-page
         queue.appendChild(suggestionElement);
     }
-  }
+}
+
+async function display_playback_queue() {
+
+    const queue = (await fetch_spotify('https://api.spotify.com/v1/me/player/queue')).queue;
+    console.log('queue: ' + queue);
+  
+    // Get a reference to the hidden-queue-page
+    const playbackQueue = document.querySelector('.playback-queue-content');
+  
+    // Clear any existing elements on the page
+    playbackQueue.innerHTML = '';
+  
+    // Loop through the queue and create HTML elements for each song
+    for(var song of queue){
+  
+        // Create a playback queue element
+        const playbackQueueElement = document.createElement('div');
+        playbackQueueElement.className = 'playback-queue-element';
+  
+        const albumCoverElement = document.createElement('img');
+        albumCoverElement.src = song.album.images[0].url;
+  
+        const songNameElement = document.createElement('p');
+        songNameElement.textContent = song.name;
+
+        var artistNames = [];
+        for(var artist of song.album.artists){ artistNames.push(artist.name); }
+
+        const artistsElement = document.createElement('p');
+        artistsElement.textContent = artistNames.join(', ');
+  
+        // Append elements to the playback queue element
+        playbackQueueElement.appendChild(albumCoverElement);
+        playbackQueueElement.appendChild(songNameElement);
+        playbackQueueElement.appendChild(statusElement);
+  
+        // Append the suggestion element to the playback queue content
+        playbackQueue.appendChild(playbackQueueElement);
+    }
+}
