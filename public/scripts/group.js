@@ -15,11 +15,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     const footer = document.querySelector('.footer');
     const suggestionBar = document.querySelector('.suggestion-bar');
 
-    // populate hidden pages
-    await populate_songs();
-    await display_suggestions();
-    await display_playback_queue();
-
     // event listener to toggle song suggestion page
     queueIcon.addEventListener('click', () => {
 
@@ -65,6 +60,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
 
     }
+
+    // populate hidden pages
+    await populate_songs();
+    await display_suggestions();
+    await display_playback_queue();
 
 });
 
@@ -355,7 +355,7 @@ async function display_suggestions() {
 
 async function display_playback_queue() {
 
-    const queue = (await fetch_spotify('https://api.spotify.com/v1/me/player/queue/')).queue;
+    const queue = (await fetch_spotify('https://api.spotify.com/v1/me/player/queue/')).data.queue;
   
     // Get a reference to the hidden-queue-page
     const playbackQueue = document.querySelector('.playback-queue-content');
@@ -385,7 +385,7 @@ async function display_playback_queue() {
         // Append elements to the playback queue element
         playbackQueueElement.appendChild(albumCoverElement);
         playbackQueueElement.appendChild(songNameElement);
-        playbackQueueElement.appendChild(statusElement);
+        playbackQueueElement.appendChild(artistsElement);
   
         // Append the suggestion element to the playback queue content
         playbackQueue.appendChild(playbackQueueElement);

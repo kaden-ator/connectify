@@ -25,9 +25,13 @@ html, body {
 }
 
 .playback-queue-content {
+    display: flex;
+    flex-direction: column-reverse; /* Stack suggestions from the bottom */
+    align-items: center;
     flex: 1; /* Fill available space */
     background-color: lightgray;
     padding: 20px; /* Add some padding for content */
+    overflow-y: scroll;
 }
 
 .hidden-song-page {
@@ -51,7 +55,7 @@ html, body {
     display: hidden;
     background-color: lightblue; /* Set the background color of the new page */
     transition: right 0.5s; /* Apply a smooth transition */
-    overflow: auto;
+    overflow-y: scroll;
 }
 
 .song-content{
@@ -157,7 +161,7 @@ html, body {
     height: calc(100vh - 40px);
     background-color: lightblue;
     transition: right 0.5s;
-    overflow-y: auto; /* Enable vertical scrolling if needed */
+    overflow-y: scroll; /* Enable vertical scrolling if needed */
 }
 
 .queue-content {
@@ -168,7 +172,7 @@ html, body {
     margin: 10px;
     transition: background-color 0.3s;
     max-height: 100%; /* Allow the queue to take up all available height */
-    overflow: hidden; /* Hide overflow when suggestions surpass the top of the screen */
+    overflow-y: scroll; /* Hide overflow when suggestions surpass the top of the screen */
 }
 
 .suggest-to-queue-button {
