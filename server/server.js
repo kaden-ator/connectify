@@ -178,8 +178,6 @@ app.post('/spotify_api_interact', async (req, res) => {
 
     const data = await Spotify_API.getTracks(URL, user_id, access_token, refresh_token);
 
-    console.log(data);
-
     res.json({ data });
 
 })

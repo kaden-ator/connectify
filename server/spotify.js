@@ -66,11 +66,6 @@ async function refreshAccessToken(user_id, refresh_token){
 
 async function getTracks(URL, user_id, access_token, refresh_token){
 
-    console.log(URL);
-    console.log(user_id);
-    console.log(access_token);
-    console.log(refresh_token);
-
     try{
         // fetch from validate_username in server.js
         const response = await fetch(URL, {

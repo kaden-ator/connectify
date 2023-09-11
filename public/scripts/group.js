@@ -16,9 +16,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     const suggestionBar = document.querySelector('.suggestion-bar');
 
     // populate hidden pages
-    //await display_playback_queue();
     await populate_songs();
     await display_suggestions();
+    await display_playback_queue();
 
     // event listener to toggle song suggestion page
     queueIcon.addEventListener('click', () => {
@@ -355,8 +355,7 @@ async function display_suggestions() {
 
 async function display_playback_queue() {
 
-    const queue = (await fetch_spotify('https://api.spotify.com/v1/me/player/queue')).queue;
-    console.log('queue: ' + queue);
+    const queue = (await fetch_spotify('https://api.spotify.com/v1/me/player/queue/')).queue;
   
     // Get a reference to the hidden-queue-page
     const playbackQueue = document.querySelector('.playback-queue-content');
