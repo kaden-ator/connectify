@@ -182,4 +182,13 @@ app.post('/spotify_api_interact', async (req, res) => {
 
 })
 
+// this route will handle all data that can be gotten with only group id
+app.post('/get_owner', async (req, res) => {
+
+    const owner = DB_interact.get_owner(req.body.group_id);
+
+    res.json({ owner });
+
+});
+
 app.listen(3000);

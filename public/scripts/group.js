@@ -2,7 +2,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // get group and user
     const username = (JSON.parse(localStorage.getItem('user'))).lowercase_username;
-    const group_id = get_group_id();
     const user = await get_user(username);
 
     // update user in local storage
@@ -288,12 +287,12 @@ function get_group_id(){
 }
 
 
-async function get_suggestions(){
+async function fetch_by_group_id(URL){
 
     const group_id = get_group_id();
 
     try{
-        const response = await fetch('/get_suggestions', {
+        const response = await fetch(URL, {
 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -301,7 +300,7 @@ async function get_suggestions(){
 
         });
 
-        try{ const data = await response.json(); return data.suggestions; }
+        try{ return await response.json(); }
         catch(err){ console.error('Error during parse:', err); }
     }
     catch(err){ console.error('Error during fetch:', err); }
@@ -311,7 +310,7 @@ async function get_suggestions(){
 }
 
 async function display_suggestions() {
-    const suggestions = await get_suggestions();
+    const suggestions = (await fetch_by_group_id('/get_suggestions')).suggestions;
   
     // Get a reference to the hidden-queue-page
     const queue = document.querySelector('.queue-content');
@@ -390,4 +389,12 @@ async function display_playback_queue() {
         // Append the suggestion element to the playback queue content
         playbackQueue.appendChild(playbackQueueElement);
     }
+}
+
+async function display_currently_playing(){
+
+    const owner = (await fetch_by_group_id('/get_owner')).owner;
+
+    
+
 }

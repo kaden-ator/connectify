@@ -189,6 +189,15 @@ async function get_suggestions(group_id){
 
 }
 
+async function get_owner(group_id){
+
+    const group = (await Group.findById(group_id));
+    const owner = await User.findById(group.owner);
+
+    return owner;
+
+}
+
 /**************************************************************************************************************/
 /*                                      SUGGESTION SCHEMA FUNCTIONS                                           */
 /**************************************************************************************************************/
@@ -242,4 +251,4 @@ async function add_suggestion(suggestion){
 
 }
 
-module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group, get_suggestions, create_suggestion, add_suggestion }
+module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group, get_owner, get_suggestions, create_suggestion, add_suggestion }
