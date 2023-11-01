@@ -1,0 +1,48 @@
+@import url('fonts.css');
+
+body{
+
+    font-family: Optika;
+    min-height: calc(100vh - 50px); 
+    min-width: calc(100vw - 50px);
+    margin: 10px;
+    padding: 0;
+    display: flex;
+    background-color: #000;
+    flex-flow: row nowrap;
+
+}
+
+.sidebar{
+    display: flex;
+    flex-flow: column nowrap;
+    min-height: calc(100vh - 20px);
+    width: calc(20vw - 10px );
+    background: linear-gradient(to top right, rgba(18,18,18,255), rgba(32,32,32,255));
+    border-radius: 10px;
+}
+
+.groups{
+    display: flex;
+    flex-flow: row wrap;
+    width: calc(80vw - 10px);
+    background: linear-gradient(to top right, rgba(18,18,18,255), rgba(32,32,32,255));
+    margin-left: 10px;
+    border-radius: 10px;
+}
+
+.groups > a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    width: 10vw;
+    height: 10vw;
+    background-color:rgba(48,48,48,255);
+    border-radius: 15px;
+    margin: 15px;
+    transition: all 400ms ease-in-out;
+}
+
+.groups > a:hover{ background-color: rgba(64,64,64,255); }

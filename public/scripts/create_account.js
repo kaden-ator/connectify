@@ -22,6 +22,8 @@ async function email_valid(email){
 
             const data = await response.json();
 
+            console.log(data);
+
             // email valid if doesn't already exist in DB
             if( !data.email_exists ){ return true; }                
 
@@ -84,15 +86,22 @@ window.addEventListener('DOMContentLoaded', () => {
     // save users access and refresh tokens for later use
     document.getElementById('access_token').value = query_params.get('access_token');
     document.getElementById('refresh_token').value = query_params.get('refresh_token');
+    const errmsg = document.querySelector('.error-msg');
 
     // check if entered email already exists
     document.getElementById('email').addEventListener('blur', async () => {
 
         // update email
         email = document.getElementById('email').value;
+        const email_valid_bool = await email_valid(email);
 
         // add message stating why email not valid
-        if( await !email_valid(email) ){  }
+        if( email_valid_bool ){ errmsg.style.display = 'none'; }
+        else{ 
+            console.log('invalid');
+            errmsg.textContent = 'Invalid Email'
+            errmsg.style.display = 'flex';
+        }
 
     });
 
@@ -108,6 +117,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const email_is_valid = await email_valid(email);
         const username_is_valid = await username_valid(username);
+
+        if(!username_is_valid){ 
+            errmsg.textContent = "Username Taken"; 
+            errmsg.style.display = 'flex'; 
+        }
+        else{ errmsg.style.display = 'none';}
 
         if( regex_valid_email(email) && email_is_valid && username_is_valid ){ event.target.submit(); }
 

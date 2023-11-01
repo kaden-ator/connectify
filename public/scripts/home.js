@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     for(var group of groups){
 
-        document.body.appendChild( make_group_button(group) );
+        document.querySelector('.groups').appendChild( make_group_button(group) );
 
     }
 
@@ -65,11 +65,7 @@ function make_group_button(group){
 
     var link = document.createElement('a');
     link.href = make_link(group._id);
-
-    var button = document.createElement('button');
-    button.innerHTML = group.group_name;
-
-    link.appendChild(button);
+    link.innerHTML = group.group_name;
 
     return link;
 

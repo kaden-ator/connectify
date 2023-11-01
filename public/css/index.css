@@ -1,9 +1,14 @@
-body{ min-height: 100vh; }
+@import url('./fonts.css');
 
-#body-container{
+body{ 
+    font-family: Optika;
+    min-height: 100vh; 
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgba(18,18,18,255);
 }
 
 #sign-log-in-container{
@@ -11,5 +16,22 @@ body{ min-height: 100vh; }
     justify-content: center;
     align-items: center;
     flex-flow: column nowrap;
-    flex: 1 1;
+    flex: 0 0 40%;
+    background: linear-gradient(to top right, rgba(24,24,24,255), rgba(28,28,28,255));
+    padding: 10vh 0;
+    border-radius: 25px;
 }
+
+#sign-log-in-container > a{
+    font-weight: 600;
+    font-size: 1.5rem;
+    background-color: rgba(28,215,96,255);
+    text-decoration: none;
+    color: #FFF;
+    padding: 2vh 3vw;
+    margin-bottom: 4vh;
+    border-radius: 10px;
+    transition: background-color 300ms ease-in-out;
+}
+
+#sign-log-in-container > a:hover{ background-color: rgba(30,180,60,255); }

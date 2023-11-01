@@ -1,0 +1,104 @@
+/* Thin */
+@font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+  
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-ThinItalic.otf') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+  }
+
+/* Light */
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-LightItalic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+  }
+
+/* Regular */
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Italic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+  }
+
+/* Medium */
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Medium.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-MediumItalic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+/* Semi-Bold */
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-SemiBoldItalic.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+  }
+
+/* Bold */
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-BoldItalic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+  }
+
+/* Black */
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-Black.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Optika';
+    src: url('../fonts/Optika/OTF/Optika-BlackItalic.otf') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+  }
