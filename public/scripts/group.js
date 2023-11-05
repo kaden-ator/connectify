@@ -1,8 +1,11 @@
+var songDict = {};
+const username = (JSON.parse(localStorage.getItem('user'))).lowercase_username;
+
 window.addEventListener('DOMContentLoaded', async () => {
 
     // get group and user
-    const username = (JSON.parse(localStorage.getItem('user'))).lowercase_username;
     const user = await get_user(username);
+    const confirmButton = document.querySelector('.confirm-button');
 
     document.querySelector('.homebutton').href = 'http://' + window.location.host + '/home/' + username;
 
@@ -22,13 +25,78 @@ window.addEventListener('DOMContentLoaded', async () => {
     localStorage.setItem('user', JSON.stringify(user));
 
     // init group queue for user
+    await populate_songs(true);
     await display_playback_queue();
-
+    
     document.querySelector('.queue').addEventListener('click', async () => { await display_playback_queue(); });
-    document.querySelector('.addsong').addEventListener('click', async () => { await populate_songs(); });
+    document.querySelector('.addsong').addEventListener('click', async () => { await populate_songs(false); });
     document.querySelector('.suggestionbutton').addEventListener('click', async () => { await display_suggestions(); });
 
+    // all user songs
+    for(const song of document.querySelectorAll('.song')){
+        song.addEventListener('click', () => {
+            const key = song.querySelector('.hidden-id').innerHTML;
+            if(song.classList.contains('song-selected')){ 
+                song.classList.remove('song-selected'); 
+                delete songDict[key];
+                const numSongs = Object.keys(songDict).length;
+                if( numSongs == 0 ){ confirmButton.style.display = 'none'; }
+                else{ confirmButton.innerHTML = "Add " + numSongs + " songs to queue"; }
+            }
+            else{ 
+                song.classList.add('song-selected'); 
+                songDict[ key ] = Object.keys(songDict).length;
+                const numSongs = Object.keys(songDict).length;
+                confirmButton.style.display = 'flex';
+                confirmButton.innerHTML = "Add " + numSongs + " songs to queue";
+            }
+
+        });
+    }
+    confirmButton.addEventListener('click', async () => {
+        await addToQueue(Object.keys(songDict), user._id, user.access_key, user.refresh_key);
+        document.querySelector('.songs-list').innerHTML = '<div class="confirm-button"></div>';
+        songDict = {};
+        confirmButton.style.display = 'none';
+        await populate_songs(false);
+        refreshEventListeners();
+    });
+
 });
+
+async function refreshEventListeners(){
+    const user = await get_user(username);
+    const confirmButton = document.querySelector('.confirm-button');
+    for(const song of document.querySelectorAll('.song')){
+        song.addEventListener('click', () => {
+            const key = song.querySelector('.hidden-id').innerHTML;
+            if(song.classList.contains('song-selected')){ 
+                song.classList.remove('song-selected'); 
+                delete songDict[key];
+                const numSongs = Object.keys(songDict).length;
+                if( numSongs == 0 ){ confirmButton.style.display = 'none'; }
+                else{ confirmButton.innerHTML = "Add " + numSongs + " songs to queue"; }
+            }
+            else{ 
+                song.classList.add('song-selected'); 
+                songDict[ key ] = Object.keys(songDict).length;
+                const numSongs = Object.keys(songDict).length;
+                confirmButton.style.display = 'flex';
+                confirmButton.innerHTML = "Add " + numSongs + " songs to queue";
+            }
+
+        });
+    }
+
+    confirmButton.addEventListener('click', async () => {
+        await addToQueue(Object.keys(songDict), user._id, user.access_key, user.refresh_key);
+        document.querySelector('.songs-list').innerHTML = '<div class="confirm-button"></div>';
+        songDict = {};
+        confirmButton.style.display = 'none';
+        await populate_songs(false);
+        refreshEventListeners();
+    });
+}
 
 async function add_suggestion(song_id, group_id, user_id){
 
@@ -67,19 +135,22 @@ async function get_user(username){
 }
 
 // populate the song suggestion page with top user songs or user library
-async function populate_songs(){
-
-    document.querySelector('.legend').style.display = 'none';
-    document.querySelector('.queue-content').style.display = 'none';
-    document.querySelector('.suggestions').style.display = 'none';
+async function populate_songs(init){
 
     const song_list = document.querySelector('.songs-list');
-    song_list.innerHTML = '';
-    song_list.style.display = 'flex';
-    var songs = (await get_top_songs()).songs.items;
+    song_list.style.display = 'none';
+    
 
-    // get songs from library if no top songs
-    if(!songs.length){ songs = await get_library().items; song_type.innerHTML = 'Your liked songs'; }
+    if(!init){
+        document.querySelector('.legend').style.display = 'none';
+        document.querySelector('.queue-content').style.display = 'none';
+        document.querySelector('.suggestions').style.display = 'none';
+        song_list.style.display = 'flex';
+    }
+
+    if(song_list.innerHTML != '<div class="confirm-button"></div>'){ return; }
+    
+    var songs = (await get_top_songs()).songs.items;
 
     // if no saved songs either, give no songs err message and return
     if(!songs.length){ return; }
@@ -108,14 +179,9 @@ async function populate_songs(){
         const image = document.createElement('img');
         image.src = song_img_url;
 
-        const button = document.createElement('button');
-        button.innerHTML = 'Suggest';
-        button.className = 'suggest-to-queue-button'
-
         song_div.appendChild(id);
         song_div.appendChild(image);
         song_div.appendChild(name);
-        song_div.appendChild(button);
         
         // add song to song-list div
         song_list.appendChild(song_div);
@@ -374,5 +440,29 @@ async function display_playback_queue() {
 async function display_currently_playing(){
 
     const owner = (await fetch_by_group_id('/get_owner')).owner;
+
+}
+
+async function addToQueue(songs, user_id, access_token, refresh_token){
+
+    for(const song of songs){
+
+        const url = 'https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A' + song;
+
+        try{
+            await fetch('/add_to_queue', {
+    
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, user_id, access_token, refresh_token })
+    
+            });
+            console.log('FETCHED!');
+        }
+        catch(err){ console.error('Error during fetch:', err); }
+    
+        return null;
+
+    }
 
 }

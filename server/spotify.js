@@ -100,4 +100,26 @@ async function handleResponse(response, URL, user_id, refresh_token){
 
 }
 
-module.exports = { getTokens, makeAuthURL, getTracks };
+async function addToQueue(URL, user_id, access_token, refresh_token){
+
+    console.log(URL);
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch(URL, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        });
+
+        console.log(response);
+
+        try{ return await handleResponse(response, URL, user_id, refresh_token); }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
+module.exports = { getTokens, makeAuthURL, getTracks, addToQueue };

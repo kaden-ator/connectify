@@ -207,4 +207,12 @@ app.post('/join_group', async (req, res) => {
 
 });
 
+app.post('/add_to_queue', async (req,res) => {
+
+    await Spotify_API.addToQueue( req.body.url, req.body.user_id, req.body.access_token, req.body.refresh_token );
+    console.log("made it here");
+    res.json({});
+
+})
+
 app.listen(3000);
