@@ -4,66 +4,29 @@ window.addEventListener('DOMContentLoaded', async () => {
     const username = (JSON.parse(localStorage.getItem('user'))).lowercase_username;
     const user = await get_user(username);
 
+    document.querySelector('.homebutton').href = 'http://' + window.location.host + '/home/' + username;
+
+    const pages = document.querySelectorAll('.pages-content');
+
+    for(const page of pages){
+        page.addEventListener('click', () => {
+
+            for(const underline of document.querySelectorAll('.underline')){ underline.classList.remove('selected'); }
+
+            page.querySelector('.underline').classList.add('selected');
+
+        });
+    }
+
     // update user in local storage
     localStorage.setItem('user', JSON.stringify(user));
 
-    // html elements
-    const queueIcon = document.querySelector('.queue-icon');
-    const hiddenSongPage = document.querySelector('.hidden-song-page');
-    const hiddenQueuePage = document.querySelector('.hidden-queue-page');
-    const footer = document.querySelector('.footer');
-    const suggestionBar = document.querySelector('.suggestion-bar');
-
-    // event listener to toggle song suggestion page
-    queueIcon.addEventListener('click', () => {
-
-        // Toggle the position of the hidden page and the height of the footer
-        if(hiddenSongPage.style.top === '100vh') {
-            suggestionBar.style.top = '-100vh';
-            hiddenSongPage.style.top = '40px';
-            footer.style.bottom = 'calc(100vh - 40px)';
-        } 
-        else{
-            suggestionBar.style.top = '0';
-            hiddenSongPage.style.top = '100vh';
-            footer.style.bottom = '0';
-        }
-    });
-
-    suggestionBar.addEventListener('click', () => {
-        
-        // Toggle the position of the hidden page and the positon of the suggestion bar
-        if(hiddenQueuePage.style.right === '-100%') {
-            suggestionBar.style.right = '90%';
-            hiddenQueuePage.style.right = '0';
-        } 
-        else{
-            suggestionBar.style.right = '0';
-            hiddenQueuePage.style.right = '-100%';
-        }
-
-    });
-
-    const suggestionButtons = document.querySelectorAll('.suggest-to-queue-button');
-    for(var button of suggestionButtons){
-
-        button.addEventListener('click', async () => {
-
-            // get required variables to create suggestion
-            const song_id = (button.parentElement.querySelector('.hidden-id')).innerHTML;
-            const group_id = get_group_id();
-            const user_id = (JSON.parse(localStorage.getItem('user')))._id;
-
-            await add_suggestion(song_id, group_id, user_id);
-
-        });
-
-    }
-
-    // populate hidden pages
-    await populate_songs();
-    await display_suggestions();
+    // init group queue for user
     await display_playback_queue();
+
+    document.querySelector('.queue').addEventListener('click', async () => { await display_playback_queue(); });
+    document.querySelector('.addsong').addEventListener('click', async () => { await populate_songs(); });
+    document.querySelector('.suggestionbutton').addEventListener('click', async () => { await display_suggestions(); });
 
 });
 
@@ -106,10 +69,13 @@ async function get_user(username){
 // populate the song suggestion page with top user songs or user library
 async function populate_songs(){
 
-    const song_type = document.querySelector('.song-type');
-    song_type.innerHTML = 'Your top songs';
+    document.querySelector('.legend').style.display = 'none';
+    document.querySelector('.queue-content').style.display = 'none';
+    document.querySelector('.suggestions').style.display = 'none';
 
     const song_list = document.querySelector('.songs-list');
+    song_list.innerHTML = '';
+    song_list.style.display = 'flex';
     var songs = (await get_top_songs()).songs.items;
 
     // get songs from library if no top songs
@@ -139,9 +105,6 @@ async function populate_songs(){
         const name = document.createElement('p');
         name.innerHTML = song_name;
 
-        const artists = document.createElement('p');
-        artists.innerHTML = song_artists;
-
         const image = document.createElement('img');
         image.src = song_img_url;
 
@@ -152,7 +115,6 @@ async function populate_songs(){
         song_div.appendChild(id);
         song_div.appendChild(image);
         song_div.appendChild(name);
-        song_div.appendChild(artists);
         song_div.appendChild(button);
         
         // add song to song-list div
@@ -311,9 +273,13 @@ async function fetch_by_group_id(URL){
 
 async function display_suggestions() {
     const suggestions = (await fetch_by_group_id('/get_suggestions')).suggestions;
+    document.querySelector('.legend').style.display = 'none';
+    document.querySelector('.queue-content').style.display = 'none';
+    document.querySelector('.songs-list').style.display = 'none';
   
     // Get a reference to the hidden-queue-page
-    const queue = document.querySelector('.queue-content');
+    const queue = document.querySelector('.suggestions');
+    queue.style.display = 'flex';
   
     // Clear any existing suggestions on the page
     queue.innerHTML = '';
@@ -355,19 +321,27 @@ async function display_suggestions() {
 async function display_playback_queue() {
 
     const queue = (await fetch_spotify('https://api.spotify.com/v1/me/player/queue/')).data.queue;
+    document.querySelector('.legend').style.display = 'flex';
+    document.querySelector('.queue-content').style.display = 'block';
+    document.querySelector('.songs-list').style.display = 'none';
+    document.querySelector('.suggestions').style.display = 'none';
   
     // Get a reference to the hidden-queue-page
-    const playbackQueue = document.querySelector('.playback-queue-content');
+    const playbackQueue = document.querySelector('.queue-content');
   
     // Clear any existing elements on the page
-    playbackQueue.innerHTML = '';
+    playbackQueue.innerHTML = '<h3>Next In Queue</h3>';
+    var counter = 2;
   
     // Loop through the queue and create HTML elements for each song
     for(var song of queue){
   
         // Create a playback queue element
         const playbackQueueElement = document.createElement('div');
-        playbackQueueElement.className = 'playback-queue-element';
+        playbackQueueElement.className = 'queue-element';
+
+        const elementNum = document.createElement('div');
+        elementNum.innerHTML = counter;
   
         const albumCoverElement = document.createElement('img');
         albumCoverElement.src = song.album.images[0].url;
@@ -380,21 +354,25 @@ async function display_playback_queue() {
 
         const artistsElement = document.createElement('p');
         artistsElement.textContent = artistNames.join(', ');
-  
+        
+        const title = document.createElement('div');
+        title.classList.add('title');
+        title.appendChild(songNameElement);
+        title.appendChild(artistsElement);
+
         // Append elements to the playback queue element
+        playbackQueueElement.appendChild(elementNum);
         playbackQueueElement.appendChild(albumCoverElement);
-        playbackQueueElement.appendChild(songNameElement);
-        playbackQueueElement.appendChild(artistsElement);
+        playbackQueueElement.appendChild(title);
   
         // Append the suggestion element to the playback queue content
         playbackQueue.appendChild(playbackQueueElement);
+        counter++;
     }
 }
 
 async function display_currently_playing(){
 
     const owner = (await fetch_by_group_id('/get_owner')).owner;
-
-    
 
 }

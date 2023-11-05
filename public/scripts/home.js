@@ -4,6 +4,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     const groups = await get_groups(username);
     const user = await get_user(username);
 
+    const createGroupBtn = document.querySelector('.create-group-button');
+    const createGroupPage = document.querySelector('.create-group');
+    const leftArrows = document.querySelectorAll('.left-arrow');
+    const groupNameInput = document.querySelector('#groupName');
+    const submitGroup = document.querySelector('.submit-group');
+    const joinGroupPage = document.querySelector('.join-group');
+    const joinGroupBtn = document.querySelector('.join-group-button');
+
     // add user data to local storage for future use
     localStorage.setItem('user', JSON.stringify( user ));
 
@@ -13,7 +21,65 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     }
 
+    createGroupBtn.addEventListener('click', () => { createGroupPage.style.display = 'flex'; createGroupPage.style.opacity = 1; joinGroupPage.style.display = 'none'; joinGroupPage.style.opacity = 0; });
+    for(const leftArrow of leftArrows){ leftArrow.addEventListener('click', () => { createGroupPage.style.display = 'none'; createGroupPage.style.opacity = 0; joinGroupPage.style.display = 'none'; joinGroupPage.style.opacity = 0; }); }
+    submitGroup.addEventListener('click', async () => { 
+        await create_group(groupNameInput.value, user._id); 
+        createGroupPage.style.display = 'none'; 
+        createGroupPage.style.opacity = 0; 
+        const groupElement =document.querySelector('.groups');
+        groupElement.innerHTML = '';
+        for(var group of await get_groups(username)){ groupElement.appendChild( make_group_button(group) ); }
+    });
+    joinGroupBtn.addEventListener('click', () => { createGroupPage.style.display = 'none'; createGroupPage.style.opacity = 0; joinGroupPage.style.display = 'flex'; joinGroupPage.style.opacity = 1; });
+    document.querySelector('.submit-join').addEventListener('click', async () => {
+        const group_id = document.querySelector('#groupID').value;
+        await join_group(user._id, group_id);
+        joinGroupPage.style.display = 'none'; 
+        joinGroupPage.style.opacity = 0; 
+        const groupElement=document.querySelector('.groups');
+        groupElement.innerHTML = '';
+        for(var group of await get_groups(username)){ groupElement.appendChild( make_group_button(group) ); }
+    })
 });
+
+async function join_group(user_id, group_id){
+
+    try{
+        // fetch from get_user in server.js by username
+        const response = await fetch('/join_group', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id, group_id })
+
+        });
+
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
+
+async function create_group(name, id){
+
+    try{
+        // fetch from get_user in server.js by username
+        const response = await fetch('/create_group', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, id })
+
+        });
+        return null;
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return null;
+
+}
 
 async function get_user(username){
 

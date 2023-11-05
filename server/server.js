@@ -191,4 +191,20 @@ app.post('/get_owner', async (req, res) => {
 
 });
 
+app.post('/create_group', async (req, res) => {
+
+    const group = await DB_interact.create_group( req.body.name, req.body.id )
+
+    await DB_interact.add_group( group );
+    res.json({});
+
+});
+
+app.post('/join_group', async (req, res) => {
+
+    await DB_interact.join_group(req.body.user_id, req.body.group_id);
+    res.json({});
+
+});
+
 app.listen(3000);

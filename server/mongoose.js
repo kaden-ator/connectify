@@ -143,12 +143,16 @@ async function create_group(name, owner_id){
 
     const owner = await User.findById(owner_id);
 
-    return new Group({
+    const group = new Group({
         group_name: name,
         spotify_port: owner.access_key,
         owner: owner_id,
         members: [owner_id]
     });
+
+    await User.updateOne({_id: owner._id}, { $push: { groups: group._id } });
+
+    return group;
 }
 
 async function add_group(group){
@@ -160,8 +164,10 @@ async function add_group(group){
 
 async function join_group(user_id, group_id){
 
+    await User.updateOne({_id: user_id}, { $push: { groups: group_id } })
+
     // add user to list of members in group
-    await Group.update(
+    await Group.updateOne(
         { _id: group_id },
         { $push: { members: user_id } }
     );

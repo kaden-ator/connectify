@@ -6,43 +6,24 @@
     	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
     	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 		<script type='module' src='./scripts/login.js'></script>
+		<link rel="stylesheet" href="./css/login.css">
     	<title>Login</title>
   	</head>
   	<body>
-		<!-- Header -->
-		<header>
-		<!-- headerSection is column flex box -->
-			<div id='headerSection'>
-				<div id='titleSection'>
-					<h2>Connectify</h2>
-				</div>
-				<!-- navSection is row flex box -->
-			</div>
-		</header>
 		<!-- Main -->
 		<main>
-			<h2>Login</h2>
 			<!-- form to add song -->
 				<form action='/' method='POST' id='login-form'>
-					<fieldset>
-						<legend>Account Details</legend>
 						<!-- Each label and input is in div so they 
 						will be treated as one object by flexbox -->
 						<div>
-							<label for='username'>Username:</label>
-							<input type='text' id='username' name='username'>
+							<input type='text' id='username' name='username' placeholder="Username">
 						</div>
 						<div>
-							<label for='password'>Password:</label>
-							<input type='password' id='password' name='password'>
+							<input type='password' id='password' name='password' placeholder="Password">
 						</div>
-					</fieldset>
 					<button type='submit' id='login-btn'>Login</button>
 				</form>
 		</main>
-		<!-- Footer -->
-		<footer style='color: white'>
-			<p><strong>2023 - Created by: Kaden Fugate</strong></p>
-		</footer>
   	</body>
 </html>

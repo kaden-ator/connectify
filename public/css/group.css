@@ -1,210 +1,161 @@
-/* Reset default margin and padding */
-body, h1, h2, h3, p {
-    margin: 0;
-    padding: 0;
-}
+@import url('./fonts.css');
 
 /* Set the overall layout */
-html, body {
-    width: 100%;
-    height: 100%;
+body {
+    font-family: Optika;
+    padding: 0;
+    margin: 10px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 20px);
     display: flex;
-    flex-direction: row;
-}
-
-.menu-bar {
-    flex: 0 0 10%; /* Don't grow or shrink, fixed width */
+    flex-direction: row nowrap;
     background-color: black;
-    min-height: 100vh;
 }
 
-.wrapper {
-    flex: 1; /* Take the remaining width */
-    display: flex;
-    flex-direction: column;
-}
+.homebutton{ text-decoration: none; color: #FFF; }
 
-.playback-queue-content {
-    display: flex;
-    flex-direction: column-reverse; /* Stack suggestions from the bottom */
-    align-items: center;
-    flex: 1; /* Fill available space */
-    background-color: lightgray;
-    padding: 20px; /* Add some padding for content */
-    overflow-y: scroll;
-}
-
-.hidden-song-page {
-    position: fixed; /*Use fixed positioning for the sliding effect*/
-    top: 100vh;
-    left: 10;
-    width: 90%;
-    height: 100vh;
-    display: hidden;
-    background-color: lightblue; /* Set the background color of the new page */
-    transition: top 0.5s; /* Apply a smooth transition */
-    overflow: auto;
-}
-
-.hidden-queue-page {
-    position: fixed; /*Use fixed positioning for the sliding effect*/
-    top: 0;
-    right: -100%;
-    width: 90%;
-    height: calc(100vh - 40px);
-    display: hidden;
-    background-color: lightblue; /* Set the background color of the new page */
-    transition: right 0.5s; /* Apply a smooth transition */
-    overflow-y: scroll;
-}
-
-.song-content{
+.sidebar{
 
     display: flex;
     flex-flow: column nowrap;
+    min-height: calc(100vh - 20px);
+    width: calc(20vw);
+    background: linear-gradient(to top right, rgba(18,18,18,255), rgba(32,32,32,255));
+    border-radius: 10px;
 
 }
 
-.song {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    margin: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.song:hover {
-    background-color: lightgray;
-}
-
-.song img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-}
-
-.song-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 20px;
-}
-
-.song-type {
-
-    padding: 20px;
-
-}
-
-.footer {
-    position: fixed;
-    left: 10%;
-    bottom: 0;
-    background-color: darkgray;
-    height: 40px; /* Keep the fixed height for the music bar */
-    width: 90%;
+.sidebar > div, .sidebar > a {
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding: 0 20px;
-    transition: bottom 0.5s; /* Apply a smooth transition */
-}
-
-.queue_icon {
-    height: 16px;
-    width: 16px;
-}
-
-.suggestion-bar {
-
-    padding: 0 6px;
-    margin: 0;
-    top: 0;
-    right: 0;
-    flex: 0 0 0.5%;
-    background-color: black;
-    height: calc(100vh - 40px);
-    position: fixed;
-    transition: top 0.5s, left 0.5s, right 0.5s;
-    z-index: 999;
-
-}
-
-.suggestion {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    margin: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.suggestion:hover {
-    cursor: pointer;
-    background-color: lightgray;
-}
-
-.suggestion img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-}
-
-.hidden-queue-page {
-    position: fixed;
-    display: flex;
-    align-items: flex-end;
     justify-content: center;
-    height: calc(100vh - 40px);
-    background-color: lightblue;
-    transition: right 0.5s;
-    overflow-y: scroll; /* Enable vertical scrolling if needed */
-}
-
-.queue-content {
-    display: flex;
-    flex-direction: column-reverse; /* Stack suggestions from the bottom */
-    align-items: center;
-    padding: 10px;
     margin: 10px;
-    transition: background-color 0.3s;
-    max-height: 100%; /* Allow the queue to take up all available height */
-    overflow-y: scroll; /* Hide overflow when suggestions surpass the top of the screen */
+    color: #FFF; 
+    background-color:rgba(48,48,48,255);
+    border-radius: 10px;
+    width: calc(100% - 20px);
+    height: 4rem;
+    transition: all 400ms ease-in-out;
 }
 
-.suggest-to-queue-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+.sidebar > div:hover, .sidebar > a:hover{ cursor: pointer; background-color: rgba(64,64,64,255); }
 
-.suggest-to-queue-button:hover {
-    background-color: #0056b3;
-}
-
-.playback-queue-element {
+.current-queue{
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
+    flex-flow: column nowrap;
+    height: calc(100vh - 20px);
+    width: calc(80vw - 10px );
+    background: linear-gradient(to top right, rgba(18,18,18,255), rgba(32,32,32,255));
+    border-radius: 10px;
+    margin-left: 10px;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.current-queue::-webkit-scrollbar {
+    width: 0; 
+    background-color: transparent;
+}
+  
+.current-queue::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+.pages{
+    margin: 20px;
+    display: flex;
+    flex-flow: row;
+}
+
+.pages > div > h2{
     margin: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    color: #FFF;
 }
 
-.playback-queue-element:hover {
-    cursor: pointer;
-    background-color: lightgray;
+.queue-content > h3{
+    margin: 30px;
+    color: #FFF;
+    font-weight: 400;
+    
 }
 
-.playback-queue-element img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+.pages-content{ margin-left: 10px; }
+
+.pages-content .underline{
+    margin: 0 4px;
+    padding: 0;
+    display: block;
+    height: 4px;
+    width: 0;
+    background-color: #FFF;
+    transition: all 300ms ease-in-out;
+} 
+
+.pages-content:hover{ cursor: pointer; }
+
+.pages-content:hover > div.underline{ width: 100%; }
+
+.underline.selected{ width: 100%; }
+
+.queue-element{
+    margin: 30px;
+    display: flex;
+    flex-flow: row nowrap;
+    color: #FFF;
+}
+
+.queue-element > .title{
+    display: flex;
+    flex-flow: column nowrap;
+    height: 60px;
+    font-size: 0.6rem;
+}
+
+.title > p{ margin-left: 15px; }
+
+.queue-element > div{ margin-right: 5%; }
+
+.queue-element > img{ width: 60px; height: 60px; }
+
+.legend{
+    display: flex;
+    flex-flow: row nowrap;
+    margin: 30px;
+    margin-right: 100px;
+}
+
+.legend > div{
+    color: #FFF;
+}
+
+.num{ margin-right: 5%; }
+.title{ width: 45%; }
+.album{ width: 45%; }
+.time{ width: 5%; }
+
+.songs-list{
+    width: 100%;
+    margin: 10px;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.song{
+    width: 10vw;
+    min-height: fit-content;
+    height: 10vw;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    color: #FFF;
+}
+
+.song:hover{ cursor: pointer; }
+
+.song > img{
+    width: 90%;
+    height: 90%;
 }
