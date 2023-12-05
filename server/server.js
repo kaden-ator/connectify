@@ -10,6 +10,15 @@ app.use(express.static('../public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// for microservice
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888'); // Replace with your allowed origin
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 app.get('/', (req, res) => { res.redirect('/create_account.html'); })
 
 // route to homepage for user - all user groups will be displayed
@@ -98,6 +107,19 @@ app.post('/validate_username', async (req, res) => {
     const username_exists = await DB_interact.username_exists(username);
 
     res.json({ username_exists });
+});
+
+app.post('/attempt_valid', async (req, res) => {
+
+    // make attempt JSON object
+    const username = req.body.username.toLowerCase();
+    const password = req.body.password;
+    const attempt = { "username": username, "password": password };
+
+    const attemptValid = await DB_interact.validate_attempt(attempt);
+
+    res.json({ attemptValid }); 
+
 });
 
 // route will get all groups from a user

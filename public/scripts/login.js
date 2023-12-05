@@ -1,5 +1,34 @@
 var username = undefined;
 
+async function attempt_valid(username, password){
+
+    try{
+        // fetch from validate_username in server.js
+        const response = await fetch('/attempt_valid', {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password }) // attempt sent to be checked
+
+        });
+
+        try{
+
+            const data = await response.json();
+
+            if( data.attemptValid ){ return true; }  
+
+        }
+        catch(err){ console.error('Error during parse:', err); }
+    }
+    catch(err){ console.error('Error during fetch:', err); }
+
+    return false; 
+
+}
+
 async function username_valid(username){
 
     try{
@@ -51,10 +80,11 @@ window.addEventListener('DOMContentLoaded', () => {
         // update email & username
 
         username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
         const username_is_valid = await username_valid(username);
 
-        if( username_is_valid ){ 
+        if( username_is_valid && await attempt_valid(username, password) ){ 
             
             // redirect user to www.URL.com/home/:username (lower case username for simplicity) ONLY IF VALID
             const redirectURL = 'http://localhost:3000/home/' + username.toLowerCase();

@@ -84,8 +84,8 @@ async function getTracks(URL, user_id, access_token, refresh_token){
 
 async function handleResponse(response, URL, user_id, refresh_token){
     
-    // successful response, return data
-    if(response.status === 200){ return await response.json(); }
+    // successful response + holds data in body, return data
+    if(200 === response.status){ return await response.json(); }
     
     // access token expired reponse, refresh token, return new call on previous response
     else if(response.status === 401){ 
@@ -101,8 +101,6 @@ async function handleResponse(response, URL, user_id, refresh_token){
 }
 
 async function addToQueue(URL, user_id, access_token, refresh_token){
-
-    console.log(URL);
 
     try{
         // fetch from validate_username in server.js

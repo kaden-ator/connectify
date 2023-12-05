@@ -144,8 +144,9 @@ body {
 
 .song{
     width: 10vw;
-    height: 20vw;
-    margin-bottom: 10px;
+    height: 15vw;
+    padding-bottom: 20px;
+    padding: 10px;
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;

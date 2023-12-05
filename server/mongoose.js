@@ -112,6 +112,34 @@ async function update_access_token(user_id, new_token){
     
 }
 
+async function validate_attempt(attempt){
+
+    try{
+
+        // get all users from the DB
+        const users = await User.find({});
+
+        try{
+
+            const res = await fetch('http://localhost:8888/name-pass-checker', {
+    
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ users, attempt })
+    
+            });
+
+            try{ const data = await res.json(); return data.attemptValid; }
+            catch(err){ console.error('Error:', err) }
+        }
+        catch(err){ console.error('Error during fetch:', err); }
+
+    }
+    catch(err){ console.error('Error fetching users:', err); }
+
+    return false; 
+
+}
 
 /**************************************************************************************************************/
 /*                                           GROUP SCHEMA FUNCTIONS                                           */
@@ -257,4 +285,4 @@ async function add_suggestion(suggestion){
 
 }
 
-module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, create_group, add_group, join_group, get_owner, get_suggestions, create_suggestion, add_suggestion }
+module.exports = { create_user, add_user, get_user_by_name, email_exists, username_exists, get_users_groups, update_access_token, validate_attempt, create_group, add_group, join_group, get_owner, get_suggestions, create_suggestion, add_suggestion }
