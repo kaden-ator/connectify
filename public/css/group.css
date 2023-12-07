@@ -1,7 +1,9 @@
 @import url('./fonts.css');
 
 /* Set the overall layout */
-body {
+body, html{max-height: 100vh; max-width: 100vw; padding: 0; margin: 0; overflow: hidden;}
+body{
+    max-height: 100vh;
     font-family: Optika;
     padding: 0;
     margin: 10px;
@@ -11,6 +13,8 @@ body {
     flex-direction: row nowrap;
     background-color: black;
 }
+
+a{ text-decoration: none; color: white; }
 
 .homebutton{ text-decoration: none; color: #FFF; }
 
@@ -104,6 +108,8 @@ body {
     display: flex;
     flex-flow: row nowrap;
     color: #FFF;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .queue-element > .title{
@@ -111,13 +117,14 @@ body {
     flex-flow: column nowrap;
     height: 60px;
     font-size: 0.6rem;
+    justify-content: center;
 }
 
-.title > p{ margin-left: 15px; }
+.title > a{ margin-left: 15px; }
 
-.queue-element > div{ margin-right: 5%; }
+.queue-element > div{ height: fit-content; margin-right: 5%; }
 
-.queue-element > img{ width: 60px; height: 60px; }
+.queue-element > img{ width: 60px; height: 60px; border-radius: 5px; }
 
 .legend{
     display: flex;
@@ -139,12 +146,13 @@ body {
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
+    gap: 10px;
 }
 
 .song{
-    width: 10vw;
-    height: 15vw;
+    width: calc((100%)/4.5);
+    height: 22.5vw;
     padding-bottom: 20px;
     padding: 10px;
     display: flex;
@@ -157,16 +165,16 @@ body {
 .song:hover{ cursor: pointer; }
 
 .song > img{
-    width: 90%;
+    width: 100%;
     height: auto;
 }
 
 .song-selected{ border: 2px solid rgba(28,215,96,255); }
 
 .confirm-button{
+    margin-left: 20px;
     display: none;
     position: absolute;
-    align-self: center;
     min-width: fit-content;
     height: 40px;
     width: 100px;
@@ -181,3 +189,78 @@ body {
 }
 
 .confirm-button:hover{ cursor: pointer; background-color: rgba(30,180,60,255); }
+
+.leave{
+    position: absolute;
+    background-color: black;
+    width: calc(80vw - 10px);
+    height: calc(100vh - 20px);
+    display: none;
+    justify-content: center;
+    align-content: center;
+    transition: all 400ms ease-in-out;
+}
+
+.make-sure{
+    font-size: 2rem;
+    margin-top: calc( (100vh - calc( 0.6 * calc(100vh - 20px) ) ) / 2);
+    background: linear-gradient(to top right, rgba(18,18,18,255), rgba(32,32,32,255));
+    display: flex;
+    width: 60%;
+    height: 50%;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column nowrap;
+    opacity: 100%;
+    border-radius: 20px;
+    color: white;
+}
+
+.yes, .no{
+    border: none;
+    font-weight: 600;
+    font-size: 1.5rem;
+    background-color: rgba(28,215,96,255);
+    text-decoration: none;
+    color: #FFF;
+    padding: 2vh 3vw;
+    margin-bottom: 2vh;
+    border-radius: 10px;
+    transition: background-color 300ms ease-in-out;
+    text-align: center;
+}
+
+.yes:hover, .no:hover{ cursor: pointer; background-color: rgba(30,180,60,255); }
+
+.song-name{
+    top: 16px;
+    padding: 0; margin: 0;
+    font-size: 16px;
+}
+
+.song-name:hover{
+    text-decoration: underline;
+}
+
+.artists{
+    padding: 0; margin: 0;
+    font-size: 14px;
+}
+
+.album-name{
+    height: fit-content;
+    width: 286px;
+}
+
+.album-name:hover{
+    text-decoration: underline;
+}
+
+.time{
+    right: 0;
+    height: fit-content;
+}
+
+.element-num{
+    height: fit-content;
+}

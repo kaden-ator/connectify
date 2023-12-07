@@ -1,9 +1,11 @@
 var username = undefined;
 
+// function will determine if login attempt has valid
+// password + username
 async function attempt_valid(username, password){
 
     try{
-        // fetch from validate_username in server.js
+        // fetch from attempt_valid in server.js
         const response = await fetch('/attempt_valid', {
 
             method: 'POST',
@@ -29,6 +31,8 @@ async function attempt_valid(username, password){
 
 }
 
+// function will determine if the username exists
+// in the database
 async function username_valid(username){
 
     try{

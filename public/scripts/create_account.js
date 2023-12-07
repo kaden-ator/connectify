@@ -3,6 +3,7 @@ const query_params = new URLSearchParams( url.search );
 var email = undefined;
 var username = undefined;
 
+// function will determine if the email is already in the DB
 async function email_valid(email){
 
     try{
@@ -22,8 +23,6 @@ async function email_valid(email){
 
             const data = await response.json();
 
-            console.log(data);
-
             // email valid if doesn't already exist in DB
             if( !data.email_exists ){ return true; }                
 
@@ -34,6 +33,7 @@ async function email_valid(email){
     return false; 
 }
 
+// regex checking for email
 function regex_valid_email(email){
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -41,6 +41,7 @@ function regex_valid_email(email){
 
 }
 
+// function will determine if the username is already within the DB
 async function username_valid(username){
 
     try{
@@ -111,10 +112,10 @@ window.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
 
         // update email & username
-
         username = document.getElementById('username').value;
         email = document.getElementById('email').value;
-
+        
+        // validate fields
         const email_is_valid = await email_valid(email);
         const username_is_valid = await username_valid(username);
 

@@ -55,12 +55,9 @@ app.get('/spotify_redirect', (req, res) => {
 });
 
 // route will create an account and link the user with their api verification key
-app.get('/create_account', (req, res) => {
+app.get('/create_account', (req, res) => {});
 
-    
-
-})
-
+// route will create the users tokens
 app.get('/access_token', async (req, res) => {
 
     const tokens = await Spotify_API.getTokens(req.query.code);
@@ -82,6 +79,7 @@ app.post('/create_account', async (req, res) => {
     res.redirect('/home/' + req.body.username.toLowerCase());
 });
 
+// route will get a user given a username
 app.post('/get_user', async(req, res) => {
 
     const username = req.body.username;
@@ -109,6 +107,7 @@ app.post('/validate_username', async (req, res) => {
     res.json({ username_exists });
 });
 
+// route will contact the microservice to validate our attempt
 app.post('/attempt_valid', async (req, res) => {
 
     // make attempt JSON object
@@ -140,6 +139,7 @@ app.post('/get_suggestions', async (req, res) => {
     res.json({ suggestions });
 })
 
+// route will get a track from the spotify API given a track ID
 app.post('/get_track_by_id', async (req, res) => {
 
     // required params to execute API call
@@ -153,19 +153,7 @@ app.post('/get_track_by_id', async (req, res) => {
     res.json( song );
 });
 
-app.post('/get_top_user_songs', async (req, res) => {
-
-    // required params to execute API call
-    const top_songs_url = 'https://api.spotify.com/v1/me/top/tracks?limit=50';
-    const user_id = req.body.user_id;
-    const access_token = req.body.access_token;
-    const refresh_token = req.body.refresh_token;
-
-    const songs = await Spotify_API.getTracks(top_songs_url, user_id, access_token, refresh_token);
-
-    res.json({ songs });
-});
-
+// route will get a users entire library
 app.post('/get_library', async (req, res) => {
 
     // required params to execute API call
@@ -179,18 +167,7 @@ app.post('/get_library', async (req, res) => {
     res.json({ songs });
 });
 
-app.post('/add_suggestion', async (req, res) => {
-
-    // required params to execute API call
-    const song_id = req.body.song_id;
-    const group_id = req.body.group_id;
-    const user_id = req.body.user_id;
-
-    await DB_interact.add_suggestion( DB_interact.create_suggestion( song_id, group_id, user_id ) );
-
-    res.json({});
-});
-
+// route will interact with spotify api
 app.post('/spotify_api_interact', async (req, res) => {
 
     const URL = req.body.url; 
@@ -213,6 +190,7 @@ app.post('/get_owner', async (req, res) => {
 
 });
 
+// route will create a group in the DB
 app.post('/create_group', async (req, res) => {
 
     const group = await DB_interact.create_group( req.body.name, req.body.id )
@@ -222,6 +200,7 @@ app.post('/create_group', async (req, res) => {
 
 });
 
+// route will add user to group in DB
 app.post('/join_group', async (req, res) => {
 
     await DB_interact.join_group(req.body.user_id, req.body.group_id);
@@ -229,6 +208,7 @@ app.post('/join_group', async (req, res) => {
 
 });
 
+// route will add a song to the queue
 app.post('/add_to_queue', async (req,res) => {
 
     await Spotify_API.addToQueue( req.body.url, req.body.user_id, req.body.access_token, req.body.refresh_token );
@@ -236,5 +216,13 @@ app.post('/add_to_queue', async (req,res) => {
     res.json({});
 
 })
+
+// route will remove a user from group in DB
+app.post('/leave_group', async (req,res) => {
+
+    await DB_interact.leave_group( req.body.user_id, req.body.group_id );
+    res.json({});
+
+});
 
 app.listen(3000);

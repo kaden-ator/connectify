@@ -6,8 +6,12 @@ const AUTHORIZATION_URL = 'https://accounts.spotify.com/authorize?';
 const AUTH_REDIRECT_URI = 'http://localhost:3000/access_token';
 const AUTH = new Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64');
 
+// this function will make the URL that the user will
+// be redirected to in order to connect their spotify 
+// account to be accessed using the api
 function makeAuthURL()
 {
+    // scope will be allowed perms thru API
     return AUTHORIZATION_URL + querystring.stringify({
         client_id:  process.env.CLIENT_ID,
         response_type:  'code',
@@ -16,6 +20,8 @@ function makeAuthURL()
     });
 }
 
+// this will get the access + refresh token for the user
+// from the spotify API
 async function getTokens(code){
 
     // access token request required grant_type, code, and redirect
@@ -24,6 +30,7 @@ async function getTokens(code){
     params.append('code', code);
     params.append('redirect_uri', AUTH_REDIRECT_URI);
 
+    // fetch tokens
     const result = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: { 
@@ -42,12 +49,14 @@ async function getTokens(code){
     return tokens;
 }
 
+// function will refresh the users access token once it has expired
 async function refreshAccessToken(user_id, refresh_token){
 
     const params = new URLSearchParams();
     params.append('grant_type', 'refresh_token');
     params.append('refresh_token', refresh_token);
 
+    // fetch token 
     const result = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: { 'Authorization': 'Basic ' + AUTH },
@@ -64,15 +73,17 @@ async function refreshAccessToken(user_id, refresh_token){
 
 }
 
+// this function will get any track from the spotify api
 async function getTracks(URL, user_id, access_token, refresh_token){
 
     try{
-        // fetch from validate_username in server.js
+        // fetch from api
         const response = await fetch(URL, {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
 
+        // handle the response from the server in a separate function
         try{ return await handleResponse(response, URL, user_id, refresh_token); }
         catch(err){ console.error('Error during parse:', err); }
     }
@@ -82,6 +93,7 @@ async function getTracks(URL, user_id, access_token, refresh_token){
 
 }
 
+// this function will handle a response from the spotify API
 async function handleResponse(response, URL, user_id, refresh_token){
     
     // successful response + holds data in body, return data
@@ -100,17 +112,18 @@ async function handleResponse(response, URL, user_id, refresh_token){
 
 }
 
+// this function will add a song to the users queue
 async function addToQueue(URL, user_id, access_token, refresh_token){
 
     try{
-        // fetch from validate_username in server.js
+
+        // add to queue
         const response = await fetch(URL, {
             method: 'POST',
             headers: { 'Authorization': 'Bearer ' + access_token }
         });
 
-        console.log(response);
-
+        // handle response
         try{ return await handleResponse(response, URL, user_id, refresh_token); }
         catch(err){ console.error('Error during parse:', err); }
     }
